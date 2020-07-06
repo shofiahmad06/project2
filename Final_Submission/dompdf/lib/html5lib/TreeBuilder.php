@@ -1,38 +1,6 @@
 <?php
 
-/*
 
-Copyright 2007 Jeroen van der Meer <http://jero.net/>
-Copyright 2009 Edward Z. Yang <edwardzyang@thewritingpot.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-*/
-
-// Tags for FIX ME!!!: (in order of priority)
-//      XXX - should be fixed NAO!
-//      XERROR - with regards to parse errors
-//      XSCRIPT - with regards to scripting mode
-//      XENCODING - with regards to encoding (for reparsing tests)
-//      XDOM - DOM specific code (tagName is explicitly not marked).
-//          this is not (yet) in helper functions.
 
 class HTML5_TreeBuilder {
     public $stack = array();
@@ -54,10 +22,7 @@ class HTML5_TreeBuilder {
     private $flag_force_quirks = false;
     private $ignored = false;
     private $quirks_mode = null;
-    // this gets to 2 when we want to ignore the next lf character, and
-    // is decrement at the beginning of each processed token (this way,
-    // code can check for (bool)$ignore_lf_token, but it phases out
-    // appropriately)
+    
     private $ignore_lf_token = 0;
     private $fragment = false;
     private $root;
@@ -177,18 +142,7 @@ class HTML5_TreeBuilder {
             $mode = $this->mode;
         }
 
-        /*
-        $backtrace = debug_backtrace();
-        if ($backtrace[1]['class'] !== 'HTML5_TreeBuilder') echo "--\n";
-        echo $this->strConst($mode);
-        if ($this->original_mode) echo " (originally ".$this->strConst($this->original_mode).")";
-        echo "\n  ";
-        token_dump($token);
-        $this->printStack();
-        $this->printActiveFormattingElements();
-        if ($this->foster_parent) echo "  -> this is a foster parent mode\n";
-        if ($this->flag_frameset_ok) echo "  -> frameset ok\n";
-        */
+       
 
         if ($this->ignore_lf_token) {
             $this->ignore_lf_token--;
@@ -208,39 +162,18 @@ class HTML5_TreeBuilder {
                         $token['name'] !== 'html' || !empty($token['public']) ||
                         !empty($token['system']) || $token !== 'about:legacy-compat'
                     ) {
-                        /* If the DOCTYPE token's name is not a case-sensitive match
-                         * for the string "html", or if the token's public identifier
-                         * is not missing, or if the token's system identifier is
-                         * neither missing nor a case-sensitive match for the string
-                         * "about:legacy-compat", then there is a parse error (this
-                         * is the DOCTYPE parse error). */
-                        // DOCTYPE parse error
+                        
                     }
-                    /* Append a DocumentType node to the Document node, with the name
-                     * attribute set to the name given in the DOCTYPE token, or the
-                     * empty string if the name was missing; the publicId attribute
-                     * set to the public identifier given in the DOCTYPE token, or
-                     * the empty string if the public identifier was missing; the
-                     * systemId attribute set to the system identifier given in the
-                     * DOCTYPE token, or the empty string if the system identifier
-                     * was missing; and the other attributes specific to
-                     * DocumentType objects set to null and empty lists as
-                     * appropriate. Associate the DocumentType node with the
-                     * Document object so that it is returned as the value of the
-                     * doctype attribute of the Document object. */
+                    
                     if (!isset($token['public'])) {
                         $token['public'] = null;
                     }
                     if (!isset($token['system'])) {
                         $token['system'] = null;
                     }
-                    // XDOM
-                    // Yes this is hacky. I'm kind of annoyed that I can't appendChild
-                    // a doctype to DOMDocument. Maybe I haven't chanted the right
-                    // syllables.
+                    
                     $impl = new DOMImplementation();
-                    // This call can fail for particularly pathological cases (namely,
-                    // the qualifiedName parameter ($token['name']) could be missing.
+                    
                     if ($token['name']) {
                         $doctype = $impl->createDocumentType($token['name'], $token['public'], $token['system']);
                         $this->dom->appendChild($doctype);
@@ -3932,12 +3865,7 @@ class HTML5_TreeBuilder {
         }
         $this->appendToRealParent($el);
         $this->stack[] = $el;
-        // XERROR: see below
-        /* If the newly created element has an xmlns attribute in the XMLNS
-         * namespace  whose value is not exactly the same as the element's
-         * namespace, that is a parse error. Similarly, if the newly created
-         * element has an xmlns:xlink attribute in the XMLNS namespace whose
-         * value is not the XLink Namespace, that is a parse error. */
+       
     }
 
     /**
