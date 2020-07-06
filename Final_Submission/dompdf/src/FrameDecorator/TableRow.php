@@ -1,39 +1,21 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameDecorator;
 
 use Dompdf\Dompdf;
 use Dompdf\Frame;
 use Dompdf\FrameDecorator\Table as TableFrameDecorator;
 
-/**
- * Decorates Frames for table row layout
- *
- * @package dompdf
- */
+
 class TableRow extends AbstractFrameDecorator
 {
-    /**
-     * TableRow constructor.
-     * @param Frame $frame
-     * @param Dompdf $dompdf
-     */
+
     function __construct(Frame $frame, Dompdf $dompdf)
     {
         parent::__construct($frame, $dompdf);
     }
 
-    //........................................................................
-
-    /**
-     * Remove all non table-cell frames from this row and move them after
-     * the table.
-     */
+  
     function normalise()
     {
         // Find our table parent
