@@ -1,24 +1,13 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 
 namespace Dompdf\Positioner;
 
 use Dompdf\FrameDecorator\AbstractFrameDecorator;
 
-/**
- * Positions absolutely positioned frames
- */
 class Absolute extends AbstractPositioner
 {
 
-    /**
-     * @param AbstractFrameDecorator $frame
-     */
     function position(AbstractFrameDecorator $frame)
     {
         $style = $frame->get_style();
@@ -33,7 +22,7 @@ class Absolute extends AbstractPositioner
         $left = $style->length_in_pt($style->left, $w);
 
         if ($p && !($left === "auto" && $right === "auto")) {
-            // Get the parent's padding box (see http://www.w3.org/TR/CSS21/visuren.html#propdef-top)
+            
             list($x, $y, $w, $h) = $p->get_padding_box();
         }
 
@@ -43,18 +32,7 @@ class Absolute extends AbstractPositioner
         $orig_width = $orig_style->width;
         $orig_height = $orig_style->height;
 
-        /****************************
-         *
-         * Width auto:
-         * ____________| left=auto | left=fixed |
-         * right=auto  |     A     |     B      |
-         * right=fixed |     C     |     D      |
-         *
-         * Width fixed:
-         * ____________| left=auto | left=fixed |
-         * right=auto  |     E     |     F      |
-         * right=fixed |     G     |     H      |
-         *****************************/
+ 
 
         if ($left === "auto") {
             if ($right === "auto") {
