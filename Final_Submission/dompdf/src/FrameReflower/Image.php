@@ -1,50 +1,26 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameReflower;
 
 use Dompdf\Helpers;
 use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
 use Dompdf\FrameDecorator\Image as ImageFrameDecorator;
 
-/**
- * Image reflower class
- *
- * @package dompdf
- */
+
 class Image extends AbstractFrameReflower
 {
 
-    /**
-     * Image constructor.
-     * @param ImageFrameDecorator $frame
-     */
+  
     function __construct(ImageFrameDecorator $frame)
     {
         parent::__construct($frame);
     }
 
-    /**
-     * @param BlockFrameDecorator|null $block
-     */
     function reflow(BlockFrameDecorator $block = null)
     {
         $this->_frame->position();
 
-        //FLOAT
-        //$frame = $this->_frame;
-        //$page = $frame->get_root();
-
-        //if ($frame->get_style()->float !== "none" ) {
-        //  $page->add_floating_frame($this);
-        //}
-
-        // Set the frame's width
+    
         $this->get_min_max_width();
 
         if ($block) {
@@ -52,9 +28,7 @@ class Image extends AbstractFrameReflower
         }
     }
 
-    /**
-     * @return array
-     */
+    
     function get_min_max_width()
     {
         if ($this->get_dompdf()->getOptions()->getDebugPng()) {
@@ -76,11 +50,7 @@ class Image extends AbstractFrameReflower
         $width_forced = true;
         $height_forced = true;
 
-        //own style auto or invalid value: use natural size in px
-        //own style value: ignore suffix text including unit, use given number as px
-        //own style %: walk up parent chain until found available space in pt; fill available space
-        //
-        //special ignored unit: e.g. 10ex: e treated as exponent; x ignored; 10e completely invalid ->like auto
+    
 
         $width = ($style->width > 0 ? $style->width : 0);
         if (Helpers::is_percent($width)) {
@@ -94,10 +64,7 @@ class Image extends AbstractFrameReflower
             }
             $width = ((float)rtrim($width, "%") * $t) / 100; //maybe 0
         } else {
-            // Don't set image original size if "%" branch was 0 or size not given.
-            // Otherwise aspect changed on %/auto combination for width/height
-            // Resample according to px per inch
-            // See also ListBulletImage::__construct
+
             $width = $style->length_in_pt($width);
         }
 
@@ -113,10 +80,7 @@ class Image extends AbstractFrameReflower
             }
             $height = ((float)rtrim($height, "%") * $t) / 100; //maybe 0
         } else {
-            // Don't set image original size if "%" branch was 0 or size not given.
-            // Otherwise aspect changed on %/auto combination for width/height
-            // Resample according to px per inch
-            // See also ListBulletImage::__construct
+
             $height = $style->length_in_pt($height);
         }
 
@@ -124,9 +88,7 @@ class Image extends AbstractFrameReflower
             // Determine the image's size. Time consuming. Only when really needed!
             list($img_width, $img_height) = Helpers::dompdf_getimagesize($this->_frame->get_image_url(), $this->get_dompdf()->getHttpContext());
 
-            // don't treat 0 as error. Can be downscaled or can be catched elsewhere if image not readable.
-            // Resample according to px per inch
-            // See also ListBulletImage::__construct
+     
             if ($width == 0 && $height == 0) {
                 $dpi = $this->_frame->get_dompdf()->getOptions()->getDpi();
                 $width = (float)($img_width * 72) / $dpi;
