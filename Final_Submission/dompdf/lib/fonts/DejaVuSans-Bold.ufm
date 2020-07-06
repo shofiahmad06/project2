@@ -1,24 +1,3 @@
-StartFontMetrics 4.1
-EncodingScheme FontSpecific
-FontName DejaVu Sans
-FontSubfamily Bold
-UniqueID DejaVu Sans Bold
-FullName DejaVu Sans Bold
-Version Version 2.37
-PostScriptName DejaVuSans-Bold
-Manufacturer DejaVu fonts team
-FontVendorURL http:
-LicenseURL http:
-PreferredFamily DejaVu Sans
-PreferredSubfamily Bold
-Weight Bold
-ItalicAngle 0
-IsFixedPitch false
-UnderlineThickness 44
-UnderlinePosition -63
-FontHeightOffset 0
-Ascender 928
-Descender -236
 FontBBox -1069 -415 1975 1174
 StartCharMetrics 6196
 U 32 ; WX 348 ; N space ; G 3
