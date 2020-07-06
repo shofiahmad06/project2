@@ -1,88 +1,44 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
 namespace Dompdf;
 
 use Dompdf\Frame;
 use Dompdf\FrameDecorator\Block;
 use Dompdf\FrameDecorator\Page;
 
-/**
- * The line box class
- *
- * This class represents a line box
- * http://www.w3.org/TR/CSS2/visuren.html#line-box
- *
- * @package dompdf
- */
+
 class LineBox
 {
 
-    /**
-     * @var Block
-     */
     protected $_block_frame;
 
-    /**
-     * @var Frame[]
-     */
+    
     protected $_frames = array();
 
-    /**
-     * @var integer
-     */
+ 
     public $wc = 0;
 
-    /**
-     * @var float
-     */
     public $y = null;
 
-    /**
-     * @var float
-     */
+
     public $w = 0.0;
 
-    /**
-     * @var float
-     */
+   
     public $h = 0.0;
 
-    /**
-     * @var float
-     */
+
     public $left = 0.0;
 
-    /**
-     * @var float
-     */
     public $right = 0.0;
 
-    /**
-     * @var Frame
-     */
+
     public $tallest_frame = null;
 
-    /**
-     * @var bool[]
-     */
     public $floating_blocks = array();
 
-    /**
-     * @var bool
-     */
+
     public $br = false;
 
-    /**
-     * Class constructor
-     *
-     * @param Block $frame the Block containing this line
-     * @param int $y
-     */
+ 
     public function __construct(Block $frame, $y = 0)
     {
         $this->_block_frame = $frame;
@@ -92,13 +48,7 @@ class LineBox
         $this->get_float_offsets();
     }
 
-    /**
-     * Returns the floating elements inside the first floating parent
-     *
-     * @param Page $root
-     *
-     * @return Frame[]
-     */
+  
     public function get_floats_inside(Page $root)
     {
         $floating_frames = $root->get_floating_frames();
@@ -227,43 +177,31 @@ class LineBox
         }
     }
 
-    /**
-     * @return float
-     */
+    
     public function get_width()
     {
         return $this->left + $this->w + $this->right;
     }
 
-    /**
-     * @return Block
-     */
+ 
     public function get_block_frame()
     {
         return $this->_block_frame;
     }
 
-    /**
-     * @return Frame[]
-     */
+  
     function &get_frames()
     {
         return $this->_frames;
     }
 
-    /**
-     * @param Frame $frame
-     */
+
     public function add_frame(Frame $frame)
     {
         $this->_frames[] = $frame;
     }
 
-    /**
-     * Recalculate LineBox width based on the contained frames total width.
-     *
-     * @return float
-     */
+   
     public function recalculate_width()
     {
         $width = 0;
@@ -275,9 +213,6 @@ class LineBox
         return $this->w = $width;
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         $props = array("wc", "y", "w", "h", "left", "right", "br");
@@ -289,16 +224,7 @@ class LineBox
 
         return $s;
     }
-    /*function __get($prop) {
-      if (!isset($this->{"_$prop"})) return;
-      return $this->{"_$prop"};
-    }*/
+  
 }
 
-/*
-class LineBoxList implements Iterator {
-  private $_p = 0;
-  private $_lines = array();
 
-}
-*/
