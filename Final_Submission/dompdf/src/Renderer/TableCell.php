@@ -1,26 +1,15 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\Renderer;
 
 use Dompdf\Frame;
 use Dompdf\FrameDecorator\Table;
 
-/**
- * Renders table cells
- *
- * @package dompdf
- */
+
 class TableCell extends Block
 {
 
-    /**
-     * @param Frame $frame
-     */
+
     function render(Frame $frame)
     {
         $style = $frame->get_style();
@@ -49,9 +38,7 @@ class TableCell extends Block
             return;
         }
 
-        // The collapsed case is slightly complicated...
-        // @todo Add support for outlines here
-
+ 
         $cellmap = $table->get_cellmap();
         $cells = $cellmap->get_spanned_cells($frame);
         $num_rows = $cellmap->get_num_rows();
@@ -61,9 +48,7 @@ class TableCell extends Block
         $i = $cells["rows"][0];
         $top_row = $cellmap->get_row($i);
 
-        // Determine if this cell borders on the bottom of the table.  If so,
-        // then we draw its bottom border.  Otherwise the next row down will
-        // draw its top border instead.
+    
         if (in_array($num_rows - 1, $cells["rows"])) {
             $draw_bottom = true;
             $bottom_row = $cellmap->get_row($num_rows - 1);
