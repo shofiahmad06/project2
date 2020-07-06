@@ -1,38 +1,20 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Helmut Tischer <htischer@weihenstephan.org>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
 namespace Dompdf\Renderer;
 
 use Dompdf\Adapter\CPDF;
 use Dompdf\FontMetrics;
 use Dompdf\Frame;
 
-/**
- * Renders text frames
- *
- * @package dompdf
- */
+
 class Text extends AbstractRenderer
 {
-    /** Thickness of underline. Screen: 0.08, print: better less, e.g. 0.04 */
+   
     const DECO_THICKNESS = 0.02;
 
-    //Tweaking if $base and $descent are not accurate.
-    //Check method_exists( $this->_canvas, "get_cpdf" )
-    //- For cpdf these can and must stay 0, because font metrics are used directly.
-    //- For other renderers, if different values are wanted, separate the parameter sets.
-    //  But $size and $size-$height seem to be accurate enough
-
-    /** Relative to bottom of text, as fraction of height */
+  
     const UNDERLINE_OFFSET = 0.0;
 
-    /** Relative to top of text */
+ 
     const OVERLINE_OFFSET = 0.0;
 
     /** Relative to centre of text. */
@@ -41,9 +23,7 @@ class Text extends AbstractRenderer
     /** How far to extend lines past either end, in pt */
     const DECO_EXTENSION = 0.0;
 
-    /**
-     * @param \Dompdf\FrameDecorator\Text $frame
-     */
+   
     function render(Frame $frame)
     {
         $text = $frame->get_text();
@@ -75,11 +55,7 @@ class Text extends AbstractRenderer
         $char_spacing = (float)$style->length_in_pt($style->letter_spacing);
         $width = $style->width;
 
-        /*$text = str_replace(
-          array("{PAGE_NUM}"),
-          array($this->_canvas->get_page_number()),
-          $text
-        );*/
+    
 
         $this->_canvas->text($x, $y, $text,
             $font, $size,
@@ -87,8 +63,7 @@ class Text extends AbstractRenderer
 
         $line = $frame->get_containing_line();
 
-        // FIXME Instead of using the tallest frame to position,
-        // the decoration, the text should be well placed
+        
         if (false && $line->tallest_frame) {
             $base_frame = $line->tallest_frame;
             $style = $base_frame->get_style();
@@ -116,10 +91,7 @@ class Text extends AbstractRenderer
         $descent = $size * $underline_position;
         $base = $size;
 
-        // Handle text decoration:
-        // http://www.w3.org/TR/CSS21/text.html#propdef-text-decoration
-
-        // Draw all applicable text-decorations.  Start with the root and work our way down.
+        
         $p = $frame;
         $stack = array();
         while ($p = $p->get_parent()) {
