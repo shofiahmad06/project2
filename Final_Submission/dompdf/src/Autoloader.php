@@ -1,28 +1,18 @@
 <?php
 namespace Dompdf;
 
-/**
- * Autoloads Dompdf classes
- *
- * @package Dompdf
- */
+
 class Autoloader
 {
     const PREFIX = 'Dompdf';
 
-    /**
-     * Register the autoloader
-     */
+    
     public static function register()
     {
         spl_autoload_register(array(new self, 'autoload'));
     }
 
-    /**
-     * Autoloader
-     *
-     * @param string
-     */
+    
     public static function autoload($class)
     {
         if ($class === 'Cpdf') {
