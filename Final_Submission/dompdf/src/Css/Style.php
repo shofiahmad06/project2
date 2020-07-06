@@ -1,12 +1,5 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Helmut Tischer <htischer@weihenstephan.org>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\Css;
 
 use Dompdf\Adapter\CPDF;
@@ -15,17 +8,7 @@ use Dompdf\Helpers;
 use Dompdf\FontMetrics;
 use Dompdf\Frame;
 
-/**
- * Represents CSS properties.
- *
- * The Style class is responsible for handling and storing CSS properties.
- * It includes methods to resolve colors and lengths, as well as getters &
- * setters for many CSS properites.
- *
- * Actual CSS parsing is performed in the {@link Stylesheet} class.
- *
- * @package dompdf
- */
+
 class Style
 {
 
@@ -46,11 +29,7 @@ class Style
      */
     static $default_line_height = 1.2;
 
-    /**
-     * Default "absolute" font sizes relative to the default font-size
-     * http://www.w3.org/TR/css3-fonts/#font-size-the-font-size-property
-     * @var array<float>
-     */
+   
     static $font_size_keywords = array(
         "xx-small" => 0.6, // 3/5
         "x-small" => 0.75, // 3/4
@@ -69,87 +48,38 @@ class Style
     static $vertical_align_keywords = array("baseline", "bottom", "middle", "sub",
         "super", "text-bottom", "text-top", "top");
 
-    /**
-     * List of all inline types.  Should really be a constant.
-     *
-     * @var array
-     */
+   
     static $INLINE_TYPES = array("inline");
 
-    /**
-     * List of all block types.  Should really be a constant.
-     *
-     * @var array
-     */
+   
     static $BLOCK_TYPES = array("block", "inline-block", "table-cell", "list-item");
 
-    /**
-     * List of all positionned types.  Should really be a constant.
-     *
-     * @var array
-     */
+  
     static $POSITIONNED_TYPES = array("relative", "absolute", "fixed");
 
-    /**
-     * List of all table types.  Should really be a constant.
-     *
-     * @var array;
-     */
+   
     static $TABLE_TYPES = array("table", "inline-table");
 
-    /**
-     * List of valid border styles.  Should also really be a constant.
-     *
-     * @var array
-     */
+   
     static $BORDER_STYLES = array("none", "hidden", "dotted", "dashed", "solid",
         "double", "groove", "ridge", "inset", "outset");
 
-    /**
-     * Default style values.
-     *
-     * @link http://www.w3.org/TR/CSS21/propidx.html
-     *
-     * @var array
-     */
+  
     static protected $_defaults = null;
 
-    /**
-     * List of inherited properties
-     *
-     * @link http://www.w3.org/TR/CSS21/propidx.html
-     *
-     * @var array
-     */
+   
     static protected $_inherited = null;
 
-    /**
-     * Caches method_exists result
-     *
-     * @var array<bool>
-     */
+    
     static protected $_methods_cache = array();
 
-    /**
-     * The stylesheet this style belongs to
-     *
-     * @see Stylesheet
-     * @var Stylesheet
-     */
+   
     protected $_stylesheet; // stylesheet this style is attached to
 
-    /**
-     * Media queries attached to the style
-     *
-     * @var int
-     */
+    
     protected $_media_queries;
 
-    /**
-     * Main array of all CSS properties & values
-     *
-     * @var array
-     */
+  
     protected $_props;
 
     /* var instead of protected would allow access outside of class */
@@ -212,12 +142,7 @@ class Style
      */
     private $fontMetrics;
 
-    /**
-     * Class constructor
-     *
-     * @param Stylesheet $stylesheet the stylesheet this Style is associated with.
-     * @param int $origin
-     */
+  
     public function __construct(Stylesheet $stylesheet, $origin = Stylesheet::ORIG_AUTHOR)
     {
         $this->setFontMetrics($stylesheet->getFontMetrics());
@@ -659,17 +584,7 @@ class Style
                 if (isset($parent->_important_props[$prop])) {
                     $this->_important_props[$prop] = true;
                 }
-                //do not assign direct, but
-                //implicite assignment through __set, redirect to specialized, get value with __get
-                //This is for computing defaults if the parent setting is also missing.
-                //Therefore do not directly assign the value without __set
-                //set _important_props before that to be able to propagate.
-                //see __set and __get, on all assignments clear cache!
-                //$this->_prop_cache[$prop] = null;
-                //$this->_props[$prop] = $parent->_props[$prop];
-                //props_set for more obvious explicite assignment not implemented, because
-                //too many implicite uses.
-                // $this->props_set($prop, $parent->$prop);
+               
                 $this->__set($prop, $parent->__get($prop));
             }
         }
@@ -738,33 +653,7 @@ class Style
         return isset($this->_important_props[$prop]);
     }
 
-    /**
-     * PHP5 overloaded setter
-     *
-     * This function along with {@link Style::__get()} permit a user of the
-     * Style class to access any (CSS) property using the following syntax:
-     * <code>
-     *  Style->margin_top = "1em";
-     *  echo (Style->margin_top);
-     * </code>
-     *
-     * __set() automatically calls the provided set function, if one exists,
-     * otherwise it sets the property directly.  Typically, __set() is not
-     * called directly from outside of this class.
-     *
-     * On each modification clear cache to return accurate setting.
-     * Also affects direct settings not using __set
-     * For easier finding all assignments, attempted to allowing only explicite assignment:
-     * Very many uses, e.g. AbstractFrameReflower.php -> for now leave as it is
-     * function __set($prop, $val) {
-     *   throw new Exception("Implicite replacement of assignment by __set.  Not good.");
-     * }
-     * function props_set($prop, $val) { ... }
-     *
-     * @param string $prop the property to set
-     * @param mixed $val the value of the property
-     *
-     */
+  
     function __set($prop, $val)
     {
         $prop = str_replace("-", "_", $prop);
@@ -794,19 +683,7 @@ class Style
         }
     }
 
-    /**
-     * PHP5 overloaded getter
-     * Along with {@link Style::__set()} __get() provides access to all CSS
-     * properties directly.  Typically __get() is not called directly outside
-     * of this class.
-     * On each modification clear cache to return accurate setting.
-     * Also affects direct settings not using __set
-     *
-     * @param string $prop
-     *
-     * @throws Exception
-     * @return mixed
-     */
+   
     function __get($prop)
     {
         if (!isset(self::$_defaults[$prop])) {
@@ -835,14 +712,7 @@ class Style
         return $this->_prop_cache[$prop] = $this->_props[$prop];
     }
 
-    /**
-     * Similar to __get() without storing the result. Useful for accessing
-     * properties while loading stylesheets.
-     *
-     * @param $prop
-     * @return string
-     * @throws Exception
-     */
+    
     function get_prop($prop)
     {
         if (!isset(self::$_defaults[$prop])) {
@@ -887,16 +757,7 @@ class Style
         return trim($this->_props["font_family"], " \t\n\r\x0B\"'");
     }
 
-    /**
-     * Getter for the 'font-family' CSS property.
-     * Uses the {@link FontMetrics} class to resolve the font family into an
-     * actual font file.
-     *
-     * @link http://www.w3.org/TR/CSS21/fonts.html#propdef-font-family
-     * @throws Exception
-     *
-     * @return string
-     */
+   
     function get_font_family()
     {
         if (isset($this->_font_family)) {
@@ -1101,28 +962,13 @@ class Style
         return $this->munge_color($this->_props["color"]);
     }
 
-    /**
-     * Returns the background color as an array
-     *
-     * The returned array has the same format as {@link Style::get_color()}
-     *
-     * @link http://www.w3.org/TR/CSS21/colors.html#propdef-background-color
-     * @return array
-     */
+   
     function get_background_color()
     {
         return $this->munge_color($this->_props["background_color"]);
     }
 
-    /**
-     * Returns the background position as an array
-     *
-     * The returned array has the following format:
-     * <code>array(x,y, "x" => x, "y" => y)</code>
-     *
-     * @link http://www.w3.org/TR/CSS21/colors.html#propdef-background-position
-     * @return array
-     */
+  
     function get_background_position()
     {
         $tmp = explode(" ", $this->_props["background_position"]);
@@ -1205,59 +1051,28 @@ class Style
     }
 
 
-    /**
-     * Returns the background as it is currently stored
-     *
-     * (currently anyway only for completeness.
-     * not used for further processing)
-     *
-     * @link http://www.w3.org/TR/CSS21/colors.html#propdef-background-attachment
-     * @return string
-     */
+ 
     function get_background_attachment()
     {
         return $this->_props["background_attachment"];
     }
 
 
-    /**
-     * Returns the background_repeat as it is currently stored
-     *
-     * (currently anyway only for completeness.
-     * not used for further processing)
-     *
-     * @link http://www.w3.org/TR/CSS21/colors.html#propdef-background-repeat
-     * @return string
-     */
+  
     function get_background_repeat()
     {
         return $this->_props["background_repeat"];
     }
 
 
-    /**
-     * Returns the background as it is currently stored
-     *
-     * (currently anyway only for completeness.
-     * not used for further processing, but the individual get_background_xxx)
-     *
-     * @link http://www.w3.org/TR/CSS21/colors.html#propdef-background
-     * @return string
-     */
+   
     function get_background()
     {
         return $this->_props["background"];
     }
 
 
-    /**#@+
-     * Returns the border color as an array
-     *
-     * See {@link Style::get_color()}
-     *
-     * @link http://www.w3.org/TR/CSS21/box.html#border-color-properties
-     * @return array
-     */
+    
     function get_border_top_color()
     {
         if ($this->_props["border_top_color"] === "") {
@@ -1353,19 +1168,7 @@ class Style
     }
     /**#@-*/
 
-    /**
-     * Return an array of all border properties.
-     *
-     * The returned array has the following structure:
-     * <code>
-     * array("top" => array("width" => [border-width],
-     *                      "style" => [border-style],
-     *                      "color" => [border-color (array)]),
-     *       "bottom" ... )
-     * </code>
-     *
-     * @return array
-     */
+ 
     function get_border_properties()
     {
         return array(
@@ -1407,16 +1210,7 @@ class Style
         $this->__get("border_" . $side . "_style") . " " . $color["hex"];
     }
 
-    /**#@+
-     * Return full border properties as a string
-     *
-     * Border properties are returned just as specified in CSS:
-     * <pre>[width] [style] [color]</pre>
-     * e.g. "1px solid blue"
-     *
-     * @link http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties
-     * @return string
-     */
+   
     function get_border_top()
     {
         return $this->_get_border("top");
@@ -1522,16 +1316,7 @@ class Style
         return $style !== "none" && $style !== "hidden" ? $this->length_in_pt($this->_props["outline_width"]) : 0;
     }
 
-    /**#@+
-     * Return full outline properties as a string
-     *
-     * Outline properties are returned just as specified in CSS:
-     * <pre>[width] [style] [color]</pre>
-     * e.g. "1px solid blue"
-     *
-     * @link http://www.w3.org/TR/CSS21/box.html#border-shorthand-properties
-     * @return string
-     */
+  
     function get_outline()
     {
         $color = $this->__get("outline_color");
@@ -1540,16 +1325,7 @@ class Style
             $this->__get("outline_style") . " " .
             $color["hex"];
     }
-    /**#@-*/
-
-    /**
-     * Returns border spacing as an array
-     *
-     * The array has the format (h_space,v_space)
-     *
-     * @link http://www.w3.org/TR/CSS21/tables.html#propdef-border-spacing
-     * @return array
-     */
+  
     function get_border_spacing()
     {
         $arr = explode(" ", $this->_props["border_spacing"]);
@@ -1559,63 +1335,7 @@ class Style
         return $arr;
     }
 
-    /*==============================*/
-
-    /*
-     !important attribute
-     For basic functionality of the !important attribute with overloading
-     of several styles of an element, changes in inherit(), merge() and _parse_properties()
-     are sufficient [helpers var $_important_props, __construct(), important_set(), important_get()]
-
-     Only for combined attributes extra treatment needed. See below.
-
-     div { border: 1px red; }
-     div { border: solid; } // Not combined! Only one occurence of same style per context
-     //
-     div { border: 1px red; }
-     div a { border: solid; } // Adding to border style ok by inheritance
-     //
-     div { border-style: solid; } // Adding to border style ok because of different styles
-     div { border: 1px red; }
-     //
-     div { border-style: solid; !important} // border: overrides, even though not !important
-     div { border: 1px dashed red; }
-     //
-     div { border: 1px red; !important }
-     div a { border-style: solid; } // Need to override because not set
-
-     Special treatment:
-     At individual property like border-top-width need to check whether overriding value is also !important.
-     Also store the !important condition for later overrides.
-     Since not known who is initiating the override, need to get passed !important as parameter.
-     !important Paramter taken as in the original style in the css file.
-     When property border !important given, do not mark subsets like border_style as important. Only
-     individual properties.
-
-     Note:
-     Setting individual property directly from css with e.g. set_border_top_style() is not needed, because
-     missing set funcions handled by a generic handler __set(), including the !important.
-     Setting individual property of as sub-property is handled below.
-
-     Implementation see at _set_style_side_type()
-     Callers _set_style_sides_type(), _set_style_type, _set_style_type_important()
-
-     Related functionality for background, padding, margin, font, list_style
-    */
-
-    /**
-     * Generalized set function for individual attribute of combined style.
-     * With check for !important
-     * Applicable for background, border, padding, margin, font, list_style
-     *
-     * Note: $type has a leading underscore (or is empty), the others not.
-     *
-     * @param $style
-     * @param $side
-     * @param $type
-     * @param $val
-     * @param $important
-     */
+   
     protected function _set_style_side_type($style, $side, $type, $val, $important)
     {
         $prop = $style . '_' . $side . $type;
@@ -1633,15 +1353,7 @@ class Style
         }
     }
 
-    /**
-     * @param $style
-     * @param $top
-     * @param $right
-     * @param $bottom
-     * @param $left
-     * @param $type
-     * @param $important
-     */
+  
     protected function _set_style_sides_type($style, $top, $right, $bottom, $left, $type, $important)
     {
         $this->_set_style_side_type($style, 'top', $type, $top, $important);
@@ -2017,12 +1729,7 @@ class Style
         }
     }
 
-    /**
-     * Sets page break properties
-     *
-     * @link http://www.w3.org/TR/CSS21/page.html#page-breaks
-     * @param string $break
-     */
+   
     function set_page_break_before($break)
     {
         if ($break === "left" || $break === "right") {
@@ -2048,20 +1755,12 @@ class Style
         $this->_props["page_break_after"] = $break;
     }
 
-    /**
-     * Sets the margin size
-     *
-     * @link http://www.w3.org/TR/CSS21/box.html#margin-properties
-     * @param $val
-     */
+ 
     function set_margin_top($val)
     {
         $this->_set_style_side_width_important('margin', 'top', $val);
     }
 
-    /**
-     * @param $val
-     */
     function set_margin_right($val)
     {
         $this->_set_style_side_width_important('margin', 'right', $val);
@@ -2382,12 +2081,7 @@ class Style
         return $this->length_in_pt($this->_props["border_" . $corner . "_radius"]);
     }
 
-    /**
-     * Sets the outline styles
-     *
-     * @link http://www.w3.org/TR/CSS21/ui.html#dynamic-outlines
-     * @param string $val
-     */
+ 
     function set_outline($val)
     {
         $important = isset($this->_important_props["outline"]);
@@ -2474,12 +2168,7 @@ class Style
         $this->_props["border_spacing"] = "$arr[0] $arr[1]";
     }
 
-    /**
-     * Sets the list style image
-     *
-     * @link http://www.w3.org/TR/CSS21/generate.html#propdef-list-style-image
-     * @param $val
-     */
+  
     function set_list_style_image($val)
     {
         //see __set and __get, on all assignments clear cache, not needed on direct set through __set
@@ -2487,12 +2176,7 @@ class Style
         $this->_props["list_style_image"] = $this->_image($val);
     }
 
-    /**
-     * Sets the list style
-     *
-     * @link http://www.w3.org/TR/CSS21/generate.html#propdef-list-style
-     * @param $val
-     */
+ 
     function set_list_style($val)
     {
         $important = isset($this->_important_props["list_style"]);
@@ -2736,12 +2420,7 @@ class Style
         $this->set_transform_origin($val);
     }
 
-    /**
-     * Sets the CSS3 transform-origin property
-     *
-     * @link http://www.w3.org/TR/css3-2d-transforms/#transform-origin
-     * @param string $val
-     */
+   
     function set_transform_origin($val)
     {
         //see __set and __get, on all assignments clear cache, not needed on direct set through __set
@@ -2893,15 +2572,7 @@ class Style
         return $this->fontMetrics;
     }
 
-    /**
-     * Generate a string representation of the Style
-     *
-     * This dumps the entire property array into a string via print_r.  Useful
-     * for debugging.
-     *
-     * @return string
-     */
-    /*DEBUGCSS print: see below additional debugging util*/
+ 
     function __toString()
     {
         return print_r(array_merge(array("parent_font_size" => $this->_parent_font_size),
