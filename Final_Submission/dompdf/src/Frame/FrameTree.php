@@ -10,30 +10,10 @@ use DOMXPath;
 use Dompdf\Exception;
 use Dompdf\Frame;
 
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
 
-/**
- * Represents an entire document as a tree of frames
- *
- * The FrameTree consists of {@link Frame} objects each tied to specific
- * DOMNode objects in a specific DomDocument.  The FrameTree has the same
- * structure as the DomDocument, but adds additional capabalities for
- * styling and layout.
- *
- * @package dompdf
- */
 class FrameTree
 {
-    /**
-     * Tags to ignore while parsing the tree
-     *
-     * @var array
-     */
+   
     protected static $HIDDEN_TAGS = array(
         "area",
         "base",
@@ -48,40 +28,17 @@ class FrameTree
         "#comment"
     );
 
-    /**
-     * The main DomDocument
-     *
-     * @see http://ca2.php.net/manual/en/ref.dom.php
-     * @var DOMDocument
-     */
+
     protected $_dom;
 
-    /**
-     * The root node of the FrameTree.
-     *
-     * @var Frame
-     */
+ 
     protected $_root;
 
-    /**
-     * Subtrees of absolutely positioned elements
-     *
-     * @var array of Frames
-     */
     protected $_absolute_frames;
 
-    /**
-     * A mapping of {@link Frame} objects to DOMNode objects
-     *
-     * @var array
-     */
     protected $_registry;
 
-    /**
-     * Class constructor
-     *
-     * @param DOMDocument $dom the main DomDocument object representing the current html document
-     */
+
     public function __construct(DomDocument $dom)
     {
         $this->_dom = $dom;
@@ -89,51 +46,31 @@ class FrameTree
         $this->_registry = array();
     }
 
-    /**
-     * Returns the DOMDocument object representing the curent html document
-     *
-     * @return DOMDocument
-     */
+   
     public function get_dom()
     {
         return $this->_dom;
     }
 
-    /**
-     * Returns the root frame of the tree
-     *
-     * @return Frame
-     */
+
     public function get_root()
     {
         return $this->_root;
     }
 
-    /**
-     * Returns a specific frame given its id
-     *
-     * @param string $id
-     *
-     * @return Frame|null
-     */
+
     public function get_frame($id)
     {
         return isset($this->_registry[$id]) ? $this->_registry[$id] : null;
     }
 
-    /**
-     * Returns a post-order iterator for all frames in the tree
-     *
-     * @return FrameTreeList|Frame[]
-     */
+ 
     public function get_frames()
     {
         return new FrameTreeList($this->_root);
     }
 
-    /**
-     * Builds the tree
-     */
+
     public function build_tree()
     {
         $html = $this->_dom->getElementsByTagName("html")->item(0);
@@ -190,17 +127,7 @@ class FrameTree
         }
     }
 
-    // FIXME: temporary hack, preferably we will improve rendering of sequential #text nodes
-    /**
-     * Remove a child from a node
-     *
-     * Remove a child from a node. If the removed node results in two
-     * adjacent #text nodes then combine them.
-     *
-     * @param DOMNode $node the current DOMNode being considered
-     * @param array $children an array of nodes that are the children of $node
-     * @param int $index index from the $children array of the node to remove
-     */
+
     protected function _remove_node(DOMNode $node, array &$children, $index)
     {
         $child = $children[$index];
@@ -217,18 +144,7 @@ class FrameTree
         array_splice($children, $index, 1);
     }
 
-    /**
-     * Recursively adds {@link Frame} objects to the tree
-     *
-     * Recursively build a tree of Frame objects based on a dom tree.
-     * No layout information is calculated at this time, although the
-     * tree may be adjusted (i.e. nodes and frames for generated content
-     * and images may be created).
-     *
-     * @param DOMNode $node the current DOMNode being considered
-     *
-     * @return Frame
-     */
+
     protected function _build_tree_r(DOMNode $node)
     {
         $frame = new Frame($node);
@@ -280,13 +196,6 @@ class FrameTree
         return $frame;
     }
 
-    /**
-     * @param DOMElement $node
-     * @param DOMElement $new_node
-     * @param string $pos
-     *
-     * @return mixed
-     */
     public function insert_node(DOMElement $node, DOMElement $new_node, $pos)
     {
         if ($pos === "after" || !$node->firstChild) {
