@@ -4,34 +4,16 @@ namespace Dompdf\Frame;
 use Iterator;
 use Dompdf\Frame;
 
-/**
- * Pre-order Iterator
- *
- * Returns frames in preorder traversal order (parent then children)
- *
- * @access private
- * @package dompdf
- */
 class FrameTreeIterator implements Iterator
 {
-    /**
-     * @var Frame
-     */
     protected $_root;
 
-    /**
-     * @var array
-     */
     protected $_stack = array();
 
-    /**
-     * @var int
-     */
+    
     protected $_num;
 
-    /**
-     * @param Frame $root
-     */
+
     public function __construct(Frame $root)
     {
         $this->_stack[] = $this->_root = $root;
