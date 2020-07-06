@@ -1,11 +1,5 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Helmut Tischer <htischer@weihenstephan.org>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\Renderer;
 
 use Dompdf\Helpers;
@@ -14,18 +8,9 @@ use Dompdf\Frame;
 use Dompdf\Image\Cache;
 use Dompdf\FrameDecorator\ListBullet as ListBulletFrameDecorator;
 
-/**
- * Renders list bullets
- *
- * @access  private
- * @package dompdf
- */
 class ListBullet extends AbstractRenderer
 {
-    /**
-     * @param $type
-     * @return mixed|string
-     */
+
     static function get_counter_chars($type)
     {
         static $cache = array();
@@ -75,13 +60,7 @@ class ListBullet extends AbstractRenderer
         return $cache[$type] = "$text.";
     }
 
-    /**
-     * @param integer $n
-     * @param string $type
-     * @param integer $pad
-     *
-     * @return string
-     */
+    
     private function make_counter($n, $type, $pad = null)
     {
         $n = intval($n);
@@ -128,9 +107,7 @@ class ListBullet extends AbstractRenderer
         return "$text.";
     }
 
-    /**
-     * @param Frame $frame
-     */
+    
     function render(Frame $frame)
     {
         $style = $frame->get_style();
@@ -153,12 +130,7 @@ class ListBullet extends AbstractRenderer
         ) {
             list($x, $y) = $frame->get_position();
 
-            //For expected size and aspect, instead of box size, use image natural size scaled to DPI.
-            // Resample the bullet image to be consistent with 'auto' sized images
-            // See also Image::get_min_max_width
-            // Tested php ver: value measured in px, suffix "px" not in value: rtrim unnecessary.
-            //$w = $frame->get_width();
-            //$h = $frame->get_height();
+           
             list($width, $height) = Helpers::dompdf_getimagesize($img, $this->_dompdf->getHttpContext());
             $dpi = $this->_dompdf->getOptions()->getDpi();
             $w = ((float)rtrim($width, "px") * 72) / $dpi;
@@ -175,7 +147,7 @@ class ListBullet extends AbstractRenderer
 
             switch ($bullet_style) {
                 default:
-                /** @noinspection PhpMissingBreakStatementInspection */
+              
                 case "disc":
                     $fill = true;
 
