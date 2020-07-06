@@ -1,43 +1,21 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameDecorator;
 
 use Dompdf\Dompdf;
 use Dompdf\Frame;
 use Dompdf\LineBox;
 
-/**
- * Decorates frames for block layout
- *
- * @access  private
- * @package dompdf
- */
+
 class Block extends AbstractFrameDecorator
 {
-    /**
-     * Current line index
-     *
-     * @var int
-     */
+
     protected $_cl;
 
-    /**
-     * The block's line boxes
-     *
-     * @var LineBox[]
-     */
+
     protected $_line_boxes;
 
-    /**
-     * Block constructor.
-     * @param Frame $frame
-     * @param Dompdf $dompdf
-     */
+
     function __construct(Frame $frame, Dompdf $dompdf)
     {
         parent::__construct($frame, $dompdf);
@@ -46,9 +24,6 @@ class Block extends AbstractFrameDecorator
         $this->_cl = 0;
     }
 
-    /**
-     *
-     */
     function reset()
     {
         parent::reset();
@@ -65,26 +40,19 @@ class Block extends AbstractFrameDecorator
         return $this->_line_boxes[$this->_cl];
     }
 
-    /**
-     * @return integer
-     */
+  
     function get_current_line_number()
     {
         return $this->_cl;
     }
 
-    /**
-     * @return LineBox[]
-     */
+
     function get_line_boxes()
     {
         return $this->_line_boxes;
     }
 
-    /**
-     * @param integer $line_number
-     * @return integer
-     */
+
     function set_current_line_number($line_number)
     {
         $line_boxes_count = count($this->_line_boxes);
@@ -115,23 +83,7 @@ class Block extends AbstractFrameDecorator
 
         $frame->set_containing_line($this->_line_boxes[$this->_cl]);
 
-        /*
-        // Adds a new line after a block, only if certain conditions are met
-        if ((($frame instanceof Inline && $frame->get_node()->nodeName !== "br") ||
-              $frame instanceof Text && trim($frame->get_text())) &&
-            ($frame->get_prev_sibling() && $frame->get_prev_sibling()->get_style()->display === "block" &&
-             $this->_line_boxes[$this->_cl]->w > 0 )) {
-
-               $this->maximize_line_height( $style->length_in_pt($style->line_height), $frame );
-               $this->add_line();
-
-               // Add each child of the inline frame to the line individually
-               foreach ($frame->get_children() as $child)
-                 $this->add_frame_to_line( $child );
-        }
-        else*/
-
-        // Handle inline frames (which are effectively wrappers)
+       
         if ($frame instanceof Inline) {
 
             // Handle line breaks
@@ -143,8 +95,6 @@ class Block extends AbstractFrameDecorator
             return;
         }
 
-        // Trim leading text if this is an empty line.  Kinda a hack to put it here,
-        // but what can you do...
         if ($this->get_current_line_box()->w == 0 &&
             $frame->is_text_node() &&
             !$frame->is_pre()
@@ -156,29 +106,12 @@ class Block extends AbstractFrameDecorator
 
         $w = $frame->get_margin_width();
 
-        // FIXME: Why? Doesn't quite seem to be the correct thing to do,
-        // but does appear to be necessary. Hack to handle wrapped white space?
+       
         if ($w == 0 && $frame->get_node()->nodeName !== "hr") {
             return;
         }
 
-        // Debugging code:
-        /*
-        Helpers::pre_r("\n<h3>Adding frame to line:</h3>");
-
-        //    Helpers::pre_r("Me: " . $this->get_node()->nodeName . " (" . spl_object_hash($this->get_node()) . ")");
-        //    Helpers::pre_r("Node: " . $frame->get_node()->nodeName . " (" . spl_object_hash($frame->get_node()) . ")");
-        if ( $frame->is_text_node() )
-          Helpers::pre_r('"'.$frame->get_node()->nodeValue.'"');
-
-        Helpers::pre_r("Line width: " . $this->_line_boxes[$this->_cl]->w);
-        Helpers::pre_r("Frame: " . get_class($frame));
-        Helpers::pre_r("Frame width: "  . $w);
-        Helpers::pre_r("Frame height: " . $frame->get_margin_height());
-        Helpers::pre_r("Containing block width: " . $this->get_containing_block("w"));
-        */
-        // End debugging
-
+      
         $line = $this->_line_boxes[$this->_cl];
         if ($line->left + $line->w + $line->right + $w > $this->get_containing_block("w")) {
             $this->add_line();
