@@ -4,36 +4,19 @@ namespace Dompdf\Frame;
 use Iterator;
 use Dompdf\Frame;
 
-/**
- * Linked-list Iterator
- *
- * Returns children in order and allows for list to change during iteration,
- * provided the changes occur to or after the current element
- *
- * @access private
- * @package dompdf
- */
+
 class FrameListIterator implements Iterator
 {
 
-    /**
-     * @var Frame
-     */
+
     protected $_parent;
 
-    /**
-     * @var Frame
-     */
+  
     protected $_cur;
 
-    /**
-     * @var int
-     */
     protected $_num;
 
-    /**
-     * @param Frame $frame
-     */
+
     public function __construct(Frame $frame)
     {
         $this->_parent = $frame;
