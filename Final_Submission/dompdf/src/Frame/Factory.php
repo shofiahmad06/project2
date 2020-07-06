@@ -1,10 +1,5 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\Frame;
 
 use Dompdf\Css\Style;
@@ -17,35 +12,12 @@ use Dompdf\FrameDecorator\Page as PageFrameDecorator;
 use Dompdf\FrameReflower\Page as PageFrameReflower;
 use Dompdf\Positioner\AbstractPositioner;
 
-/**
- * Contains frame decorating logic
- *
- * This class is responsible for assigning the correct {@link AbstractFrameDecorator},
- * {@link AbstractPositioner}, and {@link AbstractFrameReflower} objects to {@link Frame}
- * objects.  This is determined primarily by the Frame's display type, but
- * also by the Frame's node's type (e.g. DomElement vs. #text)
- *
- * @access  private
- * @package dompdf
- */
 class Factory
 {
 
-     /**
-     * Array of positioners for specific frame types
-     *
-     * @var AbstractPositioner[]
-     */
     protected static $_positioners;
 
-    /**
-     * Decorate the root Frame
-     *
-     * @param $root   Frame The frame to decorate
-     * @param $dompdf Dompdf The dompdf instance
-     *
-     * @return PageFrameDecorator
-     */
+
     static function decorate_root(Frame $root, Dompdf $dompdf)
     {
         $frame = new PageFrameDecorator($root, $dompdf);
@@ -55,17 +27,7 @@ class Factory
         return $frame;
     }
 
-    /**
-     * Decorate a Frame
-     *
-     * @param Frame $frame   The frame to decorate
-     * @param Dompdf $dompdf The dompdf instance
-     * @param Frame $root    The frame to decorate
-     *
-     * @throws Exception
-     * @return AbstractFrameDecorator
-     * FIXME: this is admittedly a little smelly...
-     */
+
     static function decorate_frame(Frame $frame, Dompdf $dompdf, Frame $root = null)
     {
         if (is_null($dompdf)) {
@@ -74,8 +36,7 @@ class Factory
 
         $style = $frame->get_style();
 
-        // Floating (and more generally out-of-flow) elements are blocks
-        // http://coding.smashingmagazine.com/2007/05/01/css-float-theory-things-you-should-know/
+       
         if (!$frame->is_in_flow() && in_array($style->display, Style::$INLINE_TYPES)) {
             $style->display = "block";
         }
@@ -92,7 +53,7 @@ class Factory
                 $reflower = "Block";
                 break;
 
-            case "inline-flex": //FIXME: display type not yet supported 
+            case "inline-flex":
             case "inline-block":
                 $positioner = "Inline";
                 $decorator = "Block";
