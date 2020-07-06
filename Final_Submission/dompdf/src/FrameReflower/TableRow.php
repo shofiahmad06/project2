@@ -1,10 +1,5 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameReflower;
 
 use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
@@ -12,25 +7,15 @@ use Dompdf\FrameDecorator\Table as TableFrameDecorator;
 use Dompdf\FrameDecorator\TableRow as TableRowFrameDecorator;
 use Dompdf\Exception;
 
-/**
- * Reflows table rows
- *
- * @package dompdf
- */
+
 class TableRow extends AbstractFrameReflower
 {
-    /**
-     * TableRow constructor.
-     * @param TableRowFrameDecorator $frame
-     */
+   
     function __construct(TableRowFrameDecorator $frame)
     {
         parent::__construct($frame);
     }
 
-    /**
-     * @param BlockFrameDecorator|null $block
-     */
     function reflow(BlockFrameDecorator $block = null)
     {
         $page = $this->_frame->get_root();
