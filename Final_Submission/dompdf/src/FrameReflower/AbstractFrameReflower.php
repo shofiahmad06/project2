@@ -1,10 +1,5 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameReflower;
 
 use Dompdf\Adapter\CPDF;
@@ -15,35 +10,16 @@ use Dompdf\Frame;
 use Dompdf\FrameDecorator\Block;
 use Dompdf\Frame\Factory;
 
-/**
- * Base reflower class
- *
- * Reflower objects are responsible for determining the width and height of
- * individual frames.  They also create line and page breaks as necessary.
- *
- * @package dompdf
- */
 abstract class AbstractFrameReflower
 {
 
-    /**
-     * Frame for this reflower
-     *
-     * @var Frame
-     */
+ 
     protected $_frame;
 
-    /**
-     * Cached min/max size
-     *
-     * @var array
-     */
+ 
     protected $_min_max_cache;
 
-    /**
-     * AbstractFrameReflower constructor.
-     * @param Frame $frame
-     */
+   
     function __construct(Frame $frame)
     {
         $this->_frame = $frame;
@@ -54,18 +30,13 @@ abstract class AbstractFrameReflower
     {
     }
 
-    /**
-     * @return Dompdf
-     */
+   
     function get_dompdf()
     {
         return $this->_frame->get_dompdf();
     }
 
-    /**
-     * Collapse frames margins
-     * http://www.w3.org/TR/CSS2/box.html#collapsing-margins
-     */
+  
     protected function _collapse_margins()
     {
         $frame = $this->_frame;
@@ -170,14 +141,7 @@ abstract class AbstractFrameReflower
      */
     abstract function reflow(Block $block = null);
 
-    /**
-     * Required for table layout: Returns an array(0 => min, 1 => max, "min"
-     * => min, "max" => max) of the minimum and maximum widths of this frame.
-     * This provides a basic implementation.  Child classes should override
-     * this if necessary.
-     *
-     * @return array|null
-     */
+
     function get_min_max_width()
     {
         if (!is_null($this->_min_max_cache)) {
@@ -261,13 +225,7 @@ abstract class AbstractFrameReflower
         return $this->_min_max_cache = array($min, $max, "min" => $min, "max" => $max);
     }
 
-    /**
-     * Parses a CSS string containing quotes and escaped hex characters
-     *
-     * @param $string string The CSS string to parse
-     * @param $single_trim
-     * @return string
-     */
+
     protected function _parse_string($string, $single_trim = false)
     {
         if ($single_trim) {
@@ -287,11 +245,6 @@ abstract class AbstractFrameReflower
         return $string;
     }
 
-    /**
-     * Parses a CSS "quotes" property
-     *
-     * @return array|null An array of pairs of quotes
-     */
     protected function _parse_quotes()
     {
         // Matches quote types
@@ -316,11 +269,6 @@ abstract class AbstractFrameReflower
         return array_chunk($quotes_array, 2);
     }
 
-    /**
-     * Parses the CSS "content" property
-     *
-     * @return string|null The resulting string
-     */
     protected function _parse_content()
     {
         // Matches generated content
@@ -361,8 +309,7 @@ abstract class AbstractFrameReflower
                 // counters?(...)
                 $match[1] = mb_strtolower(trim($match[1]));
 
-                // Handle counter() references:
-                // http://www.w3.org/TR/CSS21/generate.html#content
+                
 
                 $i = mb_strpos($match[1], ")");
                 if ($i === false) {
@@ -448,9 +395,7 @@ abstract class AbstractFrameReflower
         return $text;
     }
 
-    /**
-     * Sets the generated content of a generated frame
-     */
+
     protected function _set_content()
     {
         $frame = $this->_frame;
@@ -468,9 +413,7 @@ abstract class AbstractFrameReflower
 
         if ($style->content && $frame->get_node()->nodeName === "dompdf_generated") {
             $content = $this->_parse_content();
-            // add generated content to the font subset
-            // FIXME: This is currently too late because the font subset has already been generated.
-            //        See notes in issue #750.
+          
             if ($frame->get_dompdf()->getOptions()->getIsFontSubsettingEnabled() && $frame->get_dompdf()->get_canvas() instanceof CPDF) {
                 $frame->get_dompdf()->get_canvas()->register_string_subset($style->font_family, $content);
             }
@@ -488,11 +431,6 @@ abstract class AbstractFrameReflower
         }
     }
 
-    /**
-     * Determine current frame width based on contents
-     *
-     * @return float
-     */
     public function calculate_auto_width()
     {
         return $this->_frame->get_margin_width();
