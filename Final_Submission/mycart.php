@@ -75,7 +75,6 @@ $del = $_POST['Delivery'];
 
 						
 						";
-						//if (@mail($uemail_db,"online DeviceBd Product Order",$msg, "From:online DeviceBd <no-reply@onlineDeviceBd.xyz>")) {
 						$result = mysqli_query($con,"SELECT * FROM cart WHERE uid='$user'");
 						$t = mysqli_num_rows($result);
 						if($t <= 0) {
