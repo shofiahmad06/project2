@@ -1,64 +1,17 @@
 <?php
 
-/*
 
-Copyright 2007 Jeroen van der Meer <http://jero.net/>
-Copyright 2008 Edward Z. Yang <http://htmlpurifier.org/>
-Copyright 2009 Geoffrey Sneddon <http://gsnedders.com/>
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-*/
-
-// Some conventions:
-// /* */ indicates verbatim text from the HTML 5 specification
-// // indicates regular comments
-
-// all flags are in hyphenated form
 
 class HTML5_Tokenizer {
-    /**
-     * @var HTML5_InputStream
-     *
-     * Points to an InputStream object.
-     */
+  
     protected $stream;
 
-    /**
-     * @var HTML5_TreeBuilder
-     *
-     * Tree builder that the tokenizer emits token to.
-     */
+  
     private $tree;
 
-    /**
-     * @var int
-     *
-     * Current content model we are parsing as.
-     */
     protected $content_model;
 
-    /**
-     * Current token that is being built, but not yet emitted. Also
-     * is the last token emitted, if applicable.
-     */
+   
     protected $token;
 
     // These are constants describing the content model
@@ -67,9 +20,7 @@ class HTML5_Tokenizer {
     const CDATA     = 2;
     const PLAINTEXT = 3;
 
-    // These are constants describing tokens
-    // XXX should probably be moved somewhere else, probably the
-    // HTML5 class.
+   
     const DOCTYPE        = 0;
     const STARTTAG       = 1;
     const ENDTAG         = 2;
@@ -87,10 +38,7 @@ class HTML5_Tokenizer {
     const HEX         = '0123456789ABCDEFabcdef';
     const WHITESPACE  = "\t\n\x0c ";
 
-    /**
-     * @param $data | Data to parse
-     * @param HTML5_TreeBuilder|null $builder
-     */
+  
     public function __construct($data, $builder = null) {
         $this->stream = new HTML5_InputStream($data);
         if (!$builder) {
@@ -113,34 +61,14 @@ class HTML5_Tokenizer {
         $this->parse();
     }
 
-    // XXX maybe convert this into an iterator? regardless, this function
-    // and the save function should go into a Parser facade of some sort
-    /**
-     * Performs the actual parsing of the document.
-     */
+ 
     public function parse() {
-        // Current state
-        $state = 'data';
-        // This is used to avoid having to have look-behind in the data state.
-        $lastFourChars = '';
-        /**
-         * Escape flag as specified by the HTML5 specification: "used to
-         * control the behavior of the tokeniser. It is either true or
-         * false, and initially must be set to the false state."
-         */
+      
         $escape = false;
         //echo "\n\n";
         while($state !== null) {
 
-            /*echo $state . ' ';
-            switch ($this->content_model) {
-                case self::PCDATA: echo 'PCDATA'; break;
-                case self::RCDATA: echo 'RCDATA'; break;
-                case self::CDATA: echo 'CDATA'; break;
-                case self::PLAINTEXT: echo 'PLAINTEXT'; break;
-            }
-            if ($escape) echo " escape";
-            echo "\n";*/
+           
 
             switch($state) {
                 case 'data':
@@ -180,11 +108,7 @@ class HTML5_Tokenizer {
                         );
 
                     if ($char === '&' && $amp_cond === true) {
-                        /* U+0026 AMPERSAND (&)
-                        When the content model flag is set to one of the PCDATA or RCDATA
-                        states and the escape flag is false: switch to the
-                        character reference data state. Otherwise: treat it as per
-                        the "anything else" entry below. */
+                       
                         $state = 'character reference data';
 
                     } elseif (
@@ -192,14 +116,7 @@ class HTML5_Tokenizer {
                         $hyp_cond === true &&
                         $lastFourChars === '<!--'
                     ) {
-                        /*
-                        U+002D HYPHEN-MINUS (-)
-                        If the content model flag is set to either the RCDATA state or
-                        the CDATA state, and the escape flag is false, and there are at
-                        least three characters before this one in the input stream, and the
-                        last four characters in the input stream, including this one, are
-                        U+003C LESS-THAN SIGN, U+0021 EXCLAMATION MARK, U+002D HYPHEN-MINUS,
-                        and U+002D HYPHEN-MINUS ("<!--"), then set the escape flag to true. */
+                      
                         $escape = true;
 
                         /* In any case, emit the input character as a character token. Stay
@@ -212,14 +129,7 @@ class HTML5_Tokenizer {
 
                     /* U+003C LESS-THAN SIGN (<) */
                     } elseif ($char === '<' && $lt_cond === true) {
-                        /* When the content model flag is set to the PCDATA state: switch
-                        to the tag open state.
-
-                        When the content model flag is set to either the RCDATA state or
-                        the CDATA state and the escape flag is false: switch to the tag
-                        open state.
-
-                        Otherwise: treat it as per the "anything else" entry below. */
+                      
                         $state = 'tag open';
 
                     /* U+003E GREATER-THAN SIGN (>) */
@@ -228,11 +138,7 @@ class HTML5_Tokenizer {
                         $gt_cond === true &&
                         substr($lastFourChars, 1) === '-->'
                     ) {
-                        /* If the content model flag is set to either the RCDATA state or
-                        the CDATA state, and the escape flag is true, and the last three
-                        characters in the input stream including this one are U+002D
-                        HYPHEN-MINUS, U+002D HYPHEN-MINUS, U+003E GREATER-THAN SIGN ("-->"),
-                        set the escape flag to false. */
+                      
                         $escape = false;
 
                         /* In any case, emit the input character as a character token.
@@ -265,10 +171,7 @@ class HTML5_Tokenizer {
                             $lastFourChars = substr($lastFourChars, -4);
                         }
                     } else {
-                        /* Anything else
-                        THIS IS AN OPTIMIZATION: Get as many character that
-                        otherwise would also be treated as a character token and emit it
-                        as a single character token. Stay in the data state. */
+                       
 
                         $mask = '';
                         if ($hyp_cond === true) {
