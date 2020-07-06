@@ -1,35 +1,20 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameReflower;
 
 use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
 use Dompdf\FrameDecorator\Table as TableFrameDecorator;
 
-/**
- * Reflows table row groups (e.g. tbody tags)
- *
- * @package dompdf
- */
 class TableRowGroup extends AbstractFrameReflower
 {
 
-    /**
-     * TableRowGroup constructor.
-     * @param \Dompdf\Frame $frame
-     */
+  
     function __construct($frame)
     {
         parent::__construct($frame);
     }
 
-    /**
-     * @param BlockFrameDecorator|null $block
-     */
+
     function reflow(BlockFrameDecorator $block = null)
     {
         $page = $this->_frame->get_root();
