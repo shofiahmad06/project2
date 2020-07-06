@@ -1,31 +1,18 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\Renderer;
 
 use Dompdf\Frame;
 use Dompdf\Image\Cache;
 
-/**
- * Image renderer
- *
- * @access  private
- * @package dompdf
- */
+
 class Image extends Block
 {
 
-    /**
-     * @param Frame $frame
-     */
+
     function render(Frame $frame)
     {
-        // Render background & borders
+      
         $style = $frame->get_style();
         $cb = $frame->get_containing_block();
         list($x, $y, $w, $h) = $frame->get_border_box();
@@ -71,7 +58,7 @@ class Image extends Block
                 $style->border_left_width,
             );
 
-            // we have to get the "inner" radius
+          
             if ($tl > 0) {
                 $tl -= ($wt + $wl) / 2;
             }
