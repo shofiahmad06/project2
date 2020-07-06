@@ -1,58 +1,36 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameReflower;
 
 use Dompdf\Frame;
 use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
 use Dompdf\FrameDecorator\Page as PageFrameDecorator;
 
-/**
- * Reflows pages
- *
- * @package dompdf
- */
+
 class Page extends AbstractFrameReflower
 {
 
-    /**
-     * Cache of the callbacks array
-     *
-     * @var array
-     */
+
     private $_callbacks;
 
-    /**
-     * Cache of the canvas
-     *
-     * @var \Dompdf\Canvas
-     */
+ 
     private $_canvas;
 
-    /**
-     * Page constructor.
-     * @param PageFrameDecorator $frame
-     */
+
     function __construct(PageFrameDecorator $frame)
     {
         parent::__construct($frame);
     }
 
     /**
-     * @param Frame $frame
-     * @param $page_number
+   ram $page_number
      */
     function apply_page_style(Frame $frame, $page_number)
     {
         $style = $frame->get_style();
         $page_styles = $style->get_stylesheet()->get_page_styles();
 
-        // http://www.w3.org/TR/CSS21/page.html#page-selectors
+       
         if (count($page_styles) > 1) {
             $odd = $page_number % 2 == 1;
             $first = $page_number == 1;
@@ -85,12 +63,7 @@ class Page extends AbstractFrameReflower
         }
     }
 
-    /**
-     * Paged layout:
-     * http://www.w3.org/TR/CSS21/page.html
-     *
-     * @param BlockFrameDecorator|null $block
-     */
+
     function reflow(BlockFrameDecorator $block = null)
     {
         $fixed_children = array();
@@ -170,13 +143,7 @@ class Page extends AbstractFrameReflower
         }
     }
 
-    /**
-     * Check for callbacks that need to be performed when a given event
-     * gets triggered on a page
-     *
-     * @param string $event the type of event
-     * @param Frame $frame  the frame that event is triggered on
-     */
+
     protected function _check_callbacks($event, $frame)
     {
         if (!isset($this->_callbacks)) {
