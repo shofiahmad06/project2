@@ -1,10 +1,5 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameDecorator;
 
 use Dompdf\Cellmap;
@@ -37,34 +32,16 @@ class Table extends AbstractFrameDecorator
         'table-footer-group'
     );
 
-    /**
-     * The Cellmap object for this table.  The cellmap maps table cells
-     * to rows and columns, and aids in calculating column widths.
-     *
-     * @var \Dompdf\Cellmap
-     */
+
     protected $_cellmap;
 
-    /**
-     * The minimum width of the table, in pt
-     *
-     * @var float
-     */
+
     protected $_min_width;
 
-    /**
-     * The maximum width of the table, in pt
-     *
-     * @var float
-     */
+  
     protected $_max_width;
 
-    /**
-     * Table header rows.  Each table header is duplicated when a table
-     * spans pages.
-     *
-     * @var array
-     */
+   
     protected $_headers;
 
     /**
