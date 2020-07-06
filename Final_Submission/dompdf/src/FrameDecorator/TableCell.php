@@ -1,34 +1,19 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameDecorator;
 
 use Dompdf\Dompdf;
 use Dompdf\Frame;
 use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
 
-/**
- * Decorates table cells for layout
- *
- * @package dompdf
- */
+
 class TableCell extends BlockFrameDecorator
 {
 
     protected $_resolved_borders;
     protected $_content_height;
 
-    //........................................................................
-
-    /**
-     * TableCell constructor.
-     * @param Frame $frame
-     * @param Dompdf $dompdf
-     */
+ 
     function __construct(Frame $frame, Dompdf $dompdf)
     {
         parent::__construct($frame, $dompdf);
@@ -36,7 +21,7 @@ class TableCell extends BlockFrameDecorator
         $this->_content_height = 0;
     }
 
-    //........................................................................
+    
 
     function reset()
     {
