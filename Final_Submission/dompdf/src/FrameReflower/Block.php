@@ -1,11 +1,5 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameReflower;
 
 use Dompdf\FontMetrics;
@@ -16,19 +10,12 @@ use Dompdf\FrameDecorator\Text as TextFrameDecorator;
 use Dompdf\Exception;
 use Dompdf\Css\Style;
 
-/**
- * Reflows block frames
- *
- * @package dompdf
- */
+
 class Block extends AbstractFrameReflower
 {
-    // Minimum line width to justify, as fraction of available width
+
     const MIN_JUSTIFY_WIDTH = 0.80;
 
-    /**
-     * @var BlockFrameDecorator
-     */
     protected $_frame;
 
     function __construct(BlockFrameDecorator $frame)
@@ -36,14 +23,7 @@ class Block extends AbstractFrameReflower
         parent::__construct($frame);
     }
 
-    /**
-     *  Calculate the ideal used value for the width property as per:
-     *  http://www.w3.org/TR/CSS21/visudet.html#Computing_widths_and_margins
-     *
-     * @param float $width
-     *
-     * @return array
-     */
+
     protected function _calculate_width($width)
     {
         $frame = $this->_frame;
@@ -69,7 +49,7 @@ class Block extends AbstractFrameReflower
             $rm !== "auto" ? $rm : 0,
             $lm !== "auto" ? $lm : 0);
 
-        // absolutely positioned boxes take the 'left' and 'right' properties into account
+        
         if ($frame->is_absolute()) {
             $absolute = true;
             $dims[] = $left !== "auto" ? $left : 0;
@@ -80,13 +60,12 @@ class Block extends AbstractFrameReflower
 
         $sum = (float)$style->length_in_pt($dims, $w);
 
-        // Compare to the containing block
+
         $diff = $w - $sum;
 
         if ($diff > 0) {
             if ($absolute) {
-                // resolve auto properties: see
-                // http://www.w3.org/TR/CSS21/visudet.html#abs-non-replaced-width
+           
 
                 if ($width === "auto" && $left === "auto" && $right === "auto") {
                     if ($lm === "auto") {
@@ -96,9 +75,6 @@ class Block extends AbstractFrameReflower
                         $rm = 0;
                     }
 
-                    // Technically, the width should be "shrink-to-fit" i.e. based on the
-                    // preferred width of the content...  a little too costly here as a
-                    // special case.  Just get the width to take up the slack:
                     $left = 0;
                     $right = 0;
                     $width = $diff;
@@ -166,12 +142,7 @@ class Block extends AbstractFrameReflower
         );
     }
 
-    /**
-     * Call the above function, but resolve max/min widths
-     *
-     * @throws Exception
-     * @return array
-     */
+  
     protected function _calculate_restricted_width()
     {
         $frame = $this->_frame;
@@ -227,13 +198,7 @@ class Block extends AbstractFrameReflower
         return array($width, $margin_left, $margin_right, $left, $right);
     }
 
-    /**
-     * Determine the unrestricted height of content within the block
-     * not by adding each line's height, but by getting the last line's position.
-     * This because lines could have been pushed lower by a clearing element.
-     *
-     * @return float
-     */
+
     protected function _calculate_content_height()
     {
         $height = 0;
@@ -246,11 +211,6 @@ class Block extends AbstractFrameReflower
         return $height;
     }
 
-    /**
-     * Determine the frame's restricted height
-     *
-     * @return array
-     */
     protected function _calculate_restricted_height()
     {
         $frame = $this->_frame;
@@ -427,10 +387,7 @@ class Block extends AbstractFrameReflower
         return array($height, $margin_top, $margin_bottom, $top, $bottom);
     }
 
-    /**
-     * Adjust the justification of each of our lines.
-     * http://www.w3.org/TR/CSS21/text.html#propdef-text-align
-     */
+*/
     protected function _text_align()
     {
         $style = $this->_frame->get_style();
@@ -554,10 +511,6 @@ class Block extends AbstractFrameReflower
         }
     }
 
-    /**
-     * Align inline children vertically.
-     * Aligns each child vertically after each line is reflowed
-     */
     function vertical_align()
     {
         $canvas = null;
@@ -709,11 +662,7 @@ class Block extends AbstractFrameReflower
         }
     }
 
-    /**
-     * @param Frame $child
-     * @param float $cb_x
-     * @param float $cb_w
-     */
+
     function process_float(Frame $child, $cb_x, $cb_w)
     {
         $child_style = $child->get_style();
@@ -766,10 +715,6 @@ class Block extends AbstractFrameReflower
         }
     }
 
-    /**
-     * @param BlockFrameDecorator $block
-     * @return mixed|void
-     */
     function reflow(BlockFrameDecorator $block = null)
     {
 
@@ -795,8 +740,6 @@ class Block extends AbstractFrameReflower
             $cb = $this->_frame->get_root()->get_containing_block();
         }
 
-        // Determine the constraints imposed by this frame: calculate the width
-        // of the content area:
         list($w, $left_margin, $right_margin, $left, $right) = $this->_calculate_restricted_width();
 
         // Store the calculated properties
@@ -923,11 +866,7 @@ class Block extends AbstractFrameReflower
         }
     }
 
-    /**
-     * Determine current frame width based on contents
-     *
-     * @return float
-     */
+ 
     public function calculate_auto_width()
     {
         $width = 0;
