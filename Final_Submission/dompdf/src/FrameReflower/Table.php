@@ -1,50 +1,26 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameReflower;
 
 use Dompdf\FrameDecorator\Block as BlockFrameDecorator;
 use Dompdf\FrameDecorator\Table as TableFrameDecorator;
 
-/**
- * Reflows tables
- *
- * @access  private
- * @package dompdf
- */
+
 class Table extends AbstractFrameReflower
 {
-    /**
-     * Frame for this reflower
-     *
-     * @var TableFrameDecorator
-     */
+
     protected $_frame;
 
-    /**
-     * Cache of results between call to get_min_max_width and assign_widths
-     *
-     * @var array
-     */
+
     protected $_state;
 
-    /**
-     * Table constructor.
-     * @param TableFrameDecorator $frame
-     */
+
     function __construct(TableFrameDecorator $frame)
     {
         $this->_state = null;
         parent::__construct($frame);
     }
 
-    /**
-     * State is held here so it needs to be reset along with the decorator
-     */
     function reset()
     {
         $this->_state = null;
@@ -55,8 +31,7 @@ class Table extends AbstractFrameReflower
     {
         $style = $this->_frame->get_style();
 
-        // Find the min/max width of the table and sort the columns into
-        // absolute/percent/auto arrays
+      
         $min_width = $this->_state["min_width"];
         $max_width = $this->_state["max_width"];
         $percent_used = $this->_state["percent_used"];
@@ -67,7 +42,7 @@ class Table extends AbstractFrameReflower
         $percent =& $this->_state["percent"];
         $auto =& $this->_state["auto"];
 
-        // Determine the actual width of the table
+    
         $cb = $this->_frame->get_containing_block();
         $columns =& $this->_frame->get_cellmap()->get_columns();
 
@@ -147,22 +122,7 @@ class Table extends AbstractFrameReflower
 
         // Determine leftover and assign it evenly to all columns
         if ($width > $min_width) {
-            // We have four cases to deal with:
-            //
-            // 1. All columns are auto--no widths have been specified.  In this
-            // case we distribute extra space across all columns weighted by max-width.
-            //
-            // 2. Only absolute widths have been specified.  In this case we
-            // distribute any extra space equally among 'width: auto' columns, or all
-            // columns if no auto columns have been specified.
-            //
-            // 3. Only percentage widths have been specified.  In this case we
-            // normalize the percentage values and distribute any remaining % to
-            // width: auto columns.  We then proceed to assign widths as fractions
-            // of the table width.
-            //
-            // 4. Both absolute and percentage widths have been specified.
-
+          
             $increment = 0;
 
             // Case 1:
@@ -203,8 +163,7 @@ class Table extends AbstractFrameReflower
                 $scale = null;
                 $remaining = null;
 
-                // Scale percent values if the total percentage is > 100, or if all
-                // values are specified as percentages.
+       
                 if ($percent_used > 100 || count($auto) == 0) {
                     $scale = 100 / $percent_used;
                 } else {
@@ -230,8 +189,7 @@ class Table extends AbstractFrameReflower
 
                 }
 
-                // This works because $used_width includes the min-width of each
-                // unassigned column
+            
                 if (count($auto) > 0) {
                     $increment = ($width - $used_width) / count($auto);
 
@@ -295,11 +253,6 @@ class Table extends AbstractFrameReflower
         }
     }
 
-    /**
-     * Determine the frame's height based on min/max height
-     *
-     * @return float|int|mixed|string
-     */
     protected function _calculate_height()
     {
         $style = $this->_frame->get_style();
@@ -389,10 +342,7 @@ class Table extends AbstractFrameReflower
             return;
         }
 
-        // Let the page know that we're reflowing a table so that splits
-        // are suppressed (simply setting page-break-inside: avoid won't
-        // work because we may have an arbitrary number of block elements
-        // inside tds.)
+       
         $page->table_reflow_start();
 
         // Collapse vertical margins, if required
@@ -410,9 +360,7 @@ class Table extends AbstractFrameReflower
         $cb = $frame->get_containing_block();
         $style = $frame->get_style();
 
-        // This is slightly inexact, but should be okay.  Add half the
-        // border-spacing to the table as padding.  The other half is added to
-        // the cells themselves.
+
         if ($style->border_collapse === "separate") {
             list($h, $v) = $style->border_spacing;
 
