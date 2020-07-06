@@ -5,177 +5,76 @@ namespace Dompdf;
 use Dompdf\Css\Style;
 use Dompdf\Frame\FrameList;
 
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
 
-/**
- * The main Frame class
- *
- * This class represents a single HTML element.  This class stores
- * positioning information as well as containing block location and
- * dimensions. Style information for the element is stored in a {@link
- * Style} object. Tree structure is maintained via the parent & children
- * links.
- *
- * @package dompdf
- */
 class Frame
 {
     const WS_TEXT = 1;
     const WS_SPACE = 2;
 
-    /**
-     * The DOMElement or DOMText object this frame represents
-     *
-     * @var \DOMElement|\DOMText
-     */
+    
     protected $_node;
 
-    /**
-     * Unique identifier for this frame.  Used to reference this frame
-     * via the node.
-     *
-     * @var string
-     */
+   
     protected $_id;
 
-    /**
-     * Unique id counter
-     */
+  
     public static $ID_COUNTER = 0; /*protected*/
 
-    /**
-     * This frame's calculated style
-     *
-     * @var Style
-     */
+  
     protected $_style;
 
-    /**
-     * This frame's original style.  Needed for cases where frames are
-     * split across pages.
-     *
-     * @var Style
-     */
+    
     protected $_original_style;
 
-    /**
-     * This frame's parent in the document tree.
-     *
-     * @var Frame
-     */
     protected $_parent;
 
-    /**
-     * This frame's children
-     *
-     * @var Frame[]
-     */
+    
     protected $_frame_list;
 
-    /**
-     * This frame's first child.  All children are handled as a
-     * doubly-linked list.
-     *
-     * @var Frame
-     */
+    
     protected $_first_child;
 
-    /**
-     * This frame's last child.
-     *
-     * @var Frame
-     */
+   
     protected $_last_child;
 
-    /**
-     * This frame's previous sibling in the document tree.
-     *
-     * @var Frame
-     */
+    
     protected $_prev_sibling;
 
-    /**
-     * This frame's next sibling in the document tree.
-     *
-     * @var Frame
-     */
+  
     protected $_next_sibling;
 
-    /**
-     * This frame's containing block (used in layout): array(x, y, w, h)
-     *
-     * @var float[]
-     */
+  
     protected $_containing_block;
 
-    /**
-     * Position on the page of the top-left corner of the margin box of
-     * this frame: array(x,y)
-     *
-     * @var float[]
-     */
+  
     protected $_position;
 
-    /**
-     * Absolute opacity of this frame
-     *
-     * @var float
-     */
+   
     protected $_opacity;
 
-    /**
-     * This frame's decorator
-     *
-     * @var \Dompdf\FrameDecorator\AbstractFrameDecorator
-     */
+   
     protected $_decorator;
 
-    /**
-     * This frame's containing line box
-     *
-     * @var LineBox
-     */
+   
     protected $_containing_line;
 
-    /**
-     * @var array
-     */
+   
     protected $_is_cache = array();
 
-    /**
-     * Tells wether the frame was already pushed to the next page
-     *
-     * @var bool
-     */
+  
     public $_already_pushed = false;
 
-    /**
-     * @var bool
-     */
+   
     public $_float_next_line = false;
 
-    /**
-     * Tells wether the frame was split
-     *
-     * @var bool
-     */
+   ar bool
+    
     public $_splitted;
 
-    /**
-     * @var int
-     */
+   
     public static $_ws_state = self::WS_SPACE;
 
-    /**
-     * Class constructor
-     *
-     * @param \DOMNode $node the DOMNode this frame represents
-     */
+    
     public function __construct(\DOMNode $node)
     {
         $this->_node = $node;
@@ -233,9 +132,7 @@ class Frame
         }
     }
 
-    /**
-     * @return bool
-     */
+   
     protected function ws_keep()
     {
         $whitespace = $this->get_style()->white_space;
@@ -243,9 +140,7 @@ class Frame
         return in_array($whitespace, array("pre", "pre-wrap", "pre-line"));
     }
 
-    /**
-     * @return bool
-     */
+   
     protected function ws_is_text()
     {
         $node = $this->get_node();
@@ -265,11 +160,7 @@ class Frame
         return true;
     }
 
-    /**
-     * "Destructor": forcibly free all references held by this frame
-     *
-     * @param bool $recursive if true, call dispose on all children
-     */
+  
     public function dispose($recursive = false)
     {
         if ($recursive) {
@@ -309,9 +200,7 @@ class Frame
 
     }
 
-    /**
-     * Re-initialize the frame
-     */
+    
     public function reset()
     {
         $this->_position["x"] = null;
@@ -327,89 +216,67 @@ class Frame
         $this->_style = clone $this->_original_style;
     }
 
-    /**
-     * @return \DOMElement|\DOMText
-     */
+    
     public function get_node()
     {
         return $this->_node;
     }
 
-    /**
-     * @return string
-     */
+  
     public function get_id()
     {
         return $this->_id;
     }
 
-    /**
-     * @return Style
-     */
+ 
     public function get_style()
     {
         return $this->_style;
     }
 
-    /**
-     * @return Style
-     */
+   
     public function get_original_style()
     {
         return $this->_original_style;
     }
 
-    /**
-     * @return Frame
-     */
+   
     public function get_parent()
     {
         return $this->_parent;
     }
 
-    /**
-     * @return \Dompdf\FrameDecorator\AbstractFrameDecorator
-     */
+   
     public function get_decorator()
     {
         return $this->_decorator;
     }
 
-    /**
-     * @return Frame
-     */
+ 
     public function get_first_child()
     {
         return $this->_first_child;
     }
 
-    /**
-     * @return Frame
-     */
+   
     public function get_last_child()
     {
         return $this->_last_child;
     }
 
-    /**
-     * @return Frame
-     */
+ 
     public function get_prev_sibling()
     {
         return $this->_prev_sibling;
     }
 
-    /**
-     * @return Frame
-     */
+   
     public function get_next_sibling()
     {
         return $this->_next_sibling;
     }
 
-    /**
-     * @return FrameList|Frame[]
-     */
+   
     public function get_children()
     {
         if (isset($this->_frame_list)) {
@@ -421,15 +288,7 @@ class Frame
         return $this->_frame_list;
     }
 
-    // Layout property accessors
-
-    /**
-     * Containing block dimensions
-     *
-     * @param $i string The key of the wanted containing block's dimension (x, y, w, h)
-     *
-     * @return float[]|float
-     */
+   
     public function get_containing_block($i = null)
     {
         if (isset($i)) {
@@ -439,13 +298,7 @@ class Frame
         return $this->_containing_block;
     }
 
-    /**
-     * Block position
-     *
-     * @param $i string The key of the wanted position value (x, y)
-     *
-     * @return array|float
-     */
+    
     public function get_position($i = null)
     {
         if (isset($i)) {
@@ -455,14 +308,7 @@ class Frame
         return $this->_position;
     }
 
-    //........................................................................
-
-    /**
-     * Return the height of the margin box of the frame, in pt.  Meaningless
-     * unless the height has been calculated properly.
-     *
-     * @return float
-     */
+   
     public function get_margin_height()
     {
         $style = $this->_style;
@@ -478,12 +324,7 @@ class Frame
         ), $this->_containing_block["h"]);
     }
 
-    /**
-     * Return the width of the margin box of the frame, in pt.  Meaningless
-     * unless the width has been calculated properly.
-     *
-     * @return float
-     */
+  
     public function get_margin_width()
     {
         $style = $this->_style;
@@ -499,9 +340,7 @@ class Frame
         ), $this->_containing_block["w"]);
     }
 
-    /**
-     * @return float
-     */
+   
     public function get_break_margins()
     {
         $style = $this->_style;
@@ -517,11 +356,7 @@ class Frame
         ), $this->_containing_block["h"]);
     }
 
-    /**
-     * Return the content box (x,y,w,h) of the frame
-     *
-     * @return array
-     */
+  
     public function get_content_box()
     {
         $style = $this->_style;
@@ -549,11 +384,7 @@ class Frame
             3 => $h, "h" => $h);
     }
 
-    /**
-     * Return the padding box (x,y,w,h) of the frame
-     *
-     * @return array
-     */
+   
     public function get_padding_box()
     {
         $style = $this->_style;
@@ -585,11 +416,7 @@ class Frame
             3 => $h, "h" => $h);
     }
 
-    /**
-     * Return the border box of the frame
-     *
-     * @return array
-     */
+  
     public function get_border_box()
     {
         $style = $this->_style;
@@ -619,11 +446,7 @@ class Frame
             3 => $h, "h" => $h);
     }
 
-    /**
-     * @param null $opacity
-     *
-     * @return float
-     */
+   
     public function get_opacity($opacity = null)
     {
         if ($opacity !== null) {
@@ -633,35 +456,24 @@ class Frame
         return $this->_opacity;
     }
 
-    /**
-     * @return LineBox
-     */
+   
     public function &get_containing_line()
     {
         return $this->_containing_line;
     }
 
-    //........................................................................
-
-    // Set methods
-    /**
-     * @param $id
-     */
+   
     public function set_id($id)
     {
         $this->_id = $id;
 
-        // We can only set attributes of DOMElement objects (nodeType == 1).
-        // Since these are the only objects that we can assign CSS rules to,
-        // this shortcoming is okay.
+        
         if ($this->_node->nodeType == XML_ELEMENT_NODE) {
             $this->_node->setAttribute("frame_id", $id);
         }
     }
 
-    /**
-     * @param Style $style
-     */
+   
     public function set_style(Style $style)
     {
         if (is_null($this->_style)) {
@@ -672,20 +484,13 @@ class Frame
         $this->_style = $style;
     }
 
-    /**
-     * @param \Dompdf\FrameDecorator\AbstractFrameDecorator $decorator
-     */
+   
     public function set_decorator(FrameDecorator\AbstractFrameDecorator $decorator)
     {
         $this->_decorator = $decorator;
     }
 
-    /**
-     * @param null $x
-     * @param null $y
-     * @param null $w
-     * @param null $h
-     */
+  
     public function set_containing_block($x = null, $y = null, $w = null, $h = null)
     {
         if (is_array($x)) {
@@ -711,10 +516,7 @@ class Frame
         }
     }
 
-    /**
-     * @param null $x
-     * @param null $y
-     */
+  
     public function set_position($x = null, $y = null)
     {
         if (is_array($x)) {
@@ -730,9 +532,7 @@ class Frame
         }
     }
 
-    /**
-     * @param $opacity
-     */
+   
     public function set_opacity($opacity)
     {
         $parent = $this->get_parent();
@@ -740,19 +540,13 @@ class Frame
         $this->_opacity = $base_opacity * $opacity;
     }
 
-    /**
-     * @param LineBox $line
-     */
+    
     public function set_containing_line(LineBox $line)
     {
         $this->_containing_line = $line;
     }
 
-    /**
-     * Indicates if the margin height is auto sized
-     *
-     * @return bool
-     */
+   
     public function is_auto_height()
     {
         $style = $this->_style;
@@ -773,11 +567,7 @@ class Frame
         );
     }
 
-    /**
-     * Indicates if the margin width is auto sized
-     *
-     * @return bool
-     */
+   
     public function is_auto_width()
     {
         $style = $this->_style;
@@ -798,11 +588,7 @@ class Frame
         );
     }
 
-    /**
-     * Tells if the frame is a text node
-     *
-     * @return bool
-     */
+   
     public function is_text_node()
     {
         if (isset($this->_is_cache["text_node"])) {
@@ -812,9 +598,7 @@ class Frame
         return $this->_is_cache["text_node"] = ($this->get_node()->nodeName === "#text");
     }
 
-    /**
-     * @return bool
-     */
+    
     public function is_positionned()
     {
         if (isset($this->_is_cache["positionned"])) {
@@ -826,9 +610,7 @@ class Frame
         return $this->_is_cache["positionned"] = in_array($position, Style::$POSITIONNED_TYPES);
     }
 
-    /**
-     * @return bool
-     */
+  
     public function is_absolute()
     {
         if (isset($this->_is_cache["absolute"])) {
@@ -840,9 +622,8 @@ class Frame
         return $this->_is_cache["absolute"] = ($position === "absolute" || $position === "fixed");
     }
 
-    /**
-     * @return bool
-     */
+  eturn bool
+     
     public function is_block()
     {
         if (isset($this->_is_cache["block"])) {
@@ -852,9 +633,7 @@ class Frame
         return $this->_is_cache["block"] = in_array($this->get_style()->display, Style::$BLOCK_TYPES);
     }
 
-    /**
-     * @return bool
-     */
+    
     public function is_inline_block()
     {
         if (isset($this->_is_cache["inline_block"])) {
@@ -864,9 +643,7 @@ class Frame
         return $this->_is_cache["inline_block"] = ($this->get_style()->display === 'inline-block');
     }
 
-    /**
-     * @return bool
-     */
+   
     public function is_in_flow()
     {
         if (isset($this->_is_cache["in_flow"])) {
@@ -875,9 +652,7 @@ class Frame
         return $this->_is_cache["in_flow"] = !($this->get_style()->float !== "none" || $this->is_absolute());
     }
 
-    /**
-     * @return bool
-     */
+  
     public function is_pre()
     {
         if (isset($this->_is_cache["pre"])) {
@@ -889,9 +664,7 @@ class Frame
         return $this->_is_cache["pre"] = in_array($white_space, array("pre", "pre-wrap"));
     }
 
-    /**
-     * @return bool
-     */
+   
     public function is_table()
     {
         if (isset($this->_is_cache["table"])) {
@@ -904,19 +677,14 @@ class Frame
     }
 
 
-    /**
-     * Inserts a new child at the beginning of the Frame
-     *
-     * @param $child       Frame The new Frame to insert
-     * @param $update_node boolean Whether or not to update the DOM
-     */
+  
     public function prepend_child(Frame $child, $update_node = true)
     {
         if ($update_node) {
             $this->_node->insertBefore($child->_node, $this->_first_child ? $this->_first_child->_node : null);
         }
 
-        // Remove the child from its parent
+       
         if ($child->_parent) {
             $child->_parent->remove_child($child, false);
         }
@@ -924,7 +692,7 @@ class Frame
         $child->_parent = $this;
         $child->_prev_sibling = null;
 
-        // Handle the first child
+       
         if (!$this->_first_child) {
             $this->_first_child = $child;
             $this->_last_child = $child;
@@ -936,12 +704,7 @@ class Frame
         }
     }
 
-    /**
-     * Inserts a new child at the end of the Frame
-     *
-     * @param $child       Frame The new Frame to insert
-     * @param $update_node boolean Whether or not to update the DOM
-     */
+    
     public function append_child(Frame $child, $update_node = true)
     {
         if ($update_node) {
@@ -973,15 +736,7 @@ class Frame
         }
     }
 
-    /**
-     * Inserts a new child immediately before the specified frame
-     *
-     * @param $new_child   Frame The new Frame to insert
-     * @param $ref         Frame The Frame after the new Frame
-     * @param $update_node boolean Whether or not to update the DOM
-     *
-     * @throws Exception
-     */
+  
     public function insert_child_before(Frame $new_child, Frame $ref, $update_node = true)
     {
         if ($ref === $this->_first_child) {
@@ -1021,15 +776,7 @@ class Frame
         $ref->_prev_sibling = $new_child;
     }
 
-    /**
-     * Inserts a new child immediately after the specified frame
-     *
-     * @param $new_child   Frame The new Frame to insert
-     * @param $ref         Frame The Frame before the new Frame
-     * @param $update_node boolean Whether or not to update the DOM
-     *
-     * @throws Exception
-     */
+   
     public function insert_child_after(Frame $new_child, Frame $ref, $update_node = true)
     {
         if ($ref === $this->_last_child) {
@@ -1074,15 +821,7 @@ class Frame
         $ref->_next_sibling = $new_child;
     }
 
-    /**
-     * Remove a child frame
-     *
-     * @param Frame $child
-     * @param boolean $update_node Whether or not to remove the DOM node
-     *
-     * @throws Exception
-     * @return Frame The removed child frame
-     */
+   
     public function remove_child(Frame $child, $update_node = true)
     {
         if ($child->_parent !== $this) {
@@ -1116,18 +855,7 @@ class Frame
         return $child;
     }
 
-    //........................................................................
-
-    // Debugging function:
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        // Skip empty text frames
-//     if ( $this->is_text_node() &&
-//          preg_replace("/\s/", "", $this->_node->data) === "" )
-//       return "";
+  
 
 
         $str = "<b>" . $this->_node->nodeName . ":</b><br/>";
