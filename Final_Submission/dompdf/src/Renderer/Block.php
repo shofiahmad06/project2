@@ -1,27 +1,15 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\Renderer;
 
 use Dompdf\Frame;
 use Dompdf\FrameDecorator\AbstractFrameDecorator;
 use Dompdf\Helpers;
 
-/**
- * Renders block frames
- *
- * @package dompdf
- */
+
 class Block extends AbstractRenderer
 {
 
-    /**
-     * @param Frame $frame
-     */
     function render(Frame $frame)
     {
         $style = $frame->get_style();
@@ -88,11 +76,7 @@ class Block extends AbstractRenderer
         }
     }
 
-    /**
-     * @param AbstractFrameDecorator $frame
-     * @param null $border_box
-     * @param string $corner_style
-     */
+ 
     protected function _render_border(AbstractFrameDecorator $frame, $border_box = null, $corner_style = "bevel")
     {
         $style = $frame->get_style();
@@ -105,7 +89,7 @@ class Block extends AbstractRenderer
         // find the radius
         $radius = $style->get_computed_border_radius($border_box[2], $border_box[3]); // w, h
 
-        // Short-cut: If all the borders are "solid" with the same color and style, and no radius, we'd better draw a rectangle
+        
         if (
             in_array($bp["top"]["style"], array("solid", "dashed", "dotted")) &&
             $bp["top"] == $bp["right"] &&
@@ -183,11 +167,6 @@ class Block extends AbstractRenderer
         }
     }
 
-    /**
-     * @param AbstractFrameDecorator $frame
-     * @param null $border_box
-     * @param string $corner_style
-     */
     protected function _render_outline(AbstractFrameDecorator $frame, $border_box = null, $corner_style = "bevel")
     {
         $style = $frame->get_style();
