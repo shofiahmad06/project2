@@ -1,24 +1,3 @@
-StartFontMetrics 4.1
-Notice Converted by PHP-font-lib
-Comment https://github.com/PhenX/php-font-lib
-EncodingScheme FontSpecific
-FontName DejaVu Sans Mono
-FontSubfamily Book
-UniqueID DejaVu Sans Mono
-FullName DejaVu Sans Mono
-Version Version 2.37
-PostScriptName DejaVuSansMono
-Manufacturer DejaVu fonts team
-FontVendorURL http://dejavu.sourceforge.net
-LicenseURL http://dejavu.sourceforge.net/wiki/index.php/License
-Weight Medium
-ItalicAngle 0
-IsFixedPitch true
-UnderlineThickness 44
-UnderlinePosition -63
-FontHeightOffset 0
-Ascender 928
-Descender -236
 FontBBox -558 -375 718 1028
 StartCharMetrics 3377
 U 32 ; WX 602 ; N space ; G 3
