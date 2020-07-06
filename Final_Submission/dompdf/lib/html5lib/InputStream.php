@@ -1,33 +1,5 @@
 <?php
 
-/*
-
-Copyright 2009 Geoffrey Sneddon <http://gsnedders.com/>
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-*/
-
-// Some conventions:
-// /* */ indicates verbatim text from the HTML 5 specification
-// // indicates regular comments
 
 class HTML5_InputStream {
     /**
@@ -56,22 +28,7 @@ class HTML5_InputStream {
      */
     public function __construct($data) {
 
-        /* Given an encoding, the bytes in the input stream must be
-        converted to Unicode characters for the tokeniser, as
-        described by the rules for that encoding, except that the
-        leading U+FEFF BYTE ORDER MARK character, if any, must not
-        be stripped by the encoding layer (it is stripped by the rule below).
-
-        Bytes or sequences of bytes in the original byte stream that
-        could not be converted to Unicode characters must be converted
-        to U+FFFD REPLACEMENT CHARACTER code points. */
-
-        // XXX currently assuming input data is UTF-8; once we
-        // build encoding detection this will no longer be the case
-        //
-        // We previously had an mbstring implementation here, but that
-        // implementation is heavily non-conforming, so it's been
-        // omitted.
+       
         if (extension_loaded('iconv')) {
             // non-conforming
             $data = @iconv('UTF-8', 'UTF-8//IGNORE', $data);
@@ -95,13 +52,7 @@ class HTML5_InputStream {
                 'data' => 'null-character'
             );
         }
-        /* U+000D CARRIAGE RETURN (CR) characters and U+000A LINE FEED
-        (LF) characters are treated specially. Any CR characters
-        that are followed by LF characters must be removed, and any
-        CR characters not followed by LF characters must be converted
-        to LF characters. Thus, newlines in HTML DOMs are represented
-        by LF characters, and there are never any CR characters in the
-        input to the tokenization stage. */
+     
         $data = str_replace(
             array(
                 "\0",
@@ -116,17 +67,7 @@ class HTML5_InputStream {
             $data
         );
 
-        /* Any occurrences of any characters in the ranges U+0001 to
-        U+0008, U+000B,  U+000E to U+001F,  U+007F  to U+009F,
-        U+D800 to U+DFFF , U+FDD0 to U+FDEF, and
-        characters U+FFFE, U+FFFF, U+1FFFE, U+1FFFF, U+2FFFE, U+2FFFF,
-        U+3FFFE, U+3FFFF, U+4FFFE, U+4FFFF, U+5FFFE, U+5FFFF, U+6FFFE,
-        U+6FFFF, U+7FFFE, U+7FFFF, U+8FFFE, U+8FFFF, U+9FFFE, U+9FFFF,
-        U+AFFFE, U+AFFFF, U+BFFFE, U+BFFFF, U+CFFFE, U+CFFFF, U+DFFFE,
-        U+DFFFF, U+EFFFE, U+EFFFF, U+FFFFE, U+FFFFF, U+10FFFE, and
-        U+10FFFF are parse errors. (These are all control characters
-        or permanently undefined Unicode characters.) */
-        // Check PCRE is loaded.
+       
         if (extension_loaded('pcre')) {
             $count = preg_match_all(
                 '/(?:
@@ -177,21 +118,12 @@ class HTML5_InputStream {
         }
     }
 
-    /**
-     * Returns the current column of the current line that the tokenizer is at.
-     *
-     * @return int
-     */
+
     public function getColumnOffset() {
-        // strrpos is weird, and the offset needs to be negative for what we
-        // want (i.e., the last \n before $this->char). This needs to not have
-        // one (to make it point to the next character, the one we want the
-        // position of) added to it because strrpos's behaviour includes the
-        // final offset byte.
+       
         $lastLine = strrpos($this->data, "\n", $this->char - 1 - strlen($this->data));
 
-        // However, for here we want the length up until the next byte to be
-        // processed, so add one to the current byte ($this->char).
+    
         if ($lastLine !== false) {
             $findLengthOf = substr($this->data, $lastLine + 1, $this->char - 1 - $lastLine);
         } else {
@@ -242,14 +174,7 @@ class HTML5_InputStream {
         }
     }
 
-    /**
-     * Matches as far as possible until we reach a certain set of bytes
-     * and returns the matched substring.
-     *
-     * @param $bytes | Bytes to match.
-     * @param null $max
-     * @return bool|string
-     */
+   
     public function charsUntil($bytes, $max = null) {
         if ($this->char < $this->EOF) {
             if ($max === 0 || $max) {
@@ -265,14 +190,7 @@ class HTML5_InputStream {
         }
     }
 
-    /**
-     * Matches as far as possible with a certain set of bytes
-     * and returns the matched substring.
-     *
-     * @param $bytes | Bytes to match.
-     * @param null $max
-     * @return bool|string
-     */
+    
     public function charsWhile($bytes, $max = null) {
         if ($this->char < $this->EOF) {
             if ($max === 0 || $max) {
