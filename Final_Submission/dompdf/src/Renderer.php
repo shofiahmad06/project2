@@ -1,10 +1,4 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
 namespace Dompdf;
 
 use Dompdf\Renderer\AbstractRenderer;
@@ -17,43 +11,23 @@ use Dompdf\Renderer\Text;
 
 use Dompdf\Frame;
 
-/**
- * Concrete renderer
- *
- * Instantiates several specific renderers in order to render any given frame.
- *
- * @package dompdf
- */
+
 class Renderer extends AbstractRenderer
 {
 
-    /**
-     * Array of renderers for specific frame types
-     *
-     * @var AbstractRenderer[]
-     */
+    
     protected $_renderers;
 
-    /**
-     * Cache of the callbacks array
-     *
-     * @var array
-     */
+   
     private $_callbacks;
 
-    /**
-     * Advance the canvas to the next page
-     */
+    
     function new_page()
     {
         $this->_canvas->new_page();
     }
 
-    /**
-     * Render frames recursively
-     *
-     * @param Frame $frame the frame to render
-     */
+    
     public function render(Frame $frame)
     {
         global $_dompdf_debug;
@@ -237,14 +211,7 @@ class Renderer extends AbstractRenderer
         }
     }
 
-    /**
-     * Render a single frame
-     *
-     * Creates Renderer objects on demand
-     *
-     * @param string $type type of renderer to use
-     * @param Frame $frame the frame to render
-     */
+    
     protected function _render_frame($type, $frame)
     {
 
