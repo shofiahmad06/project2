@@ -1,27 +1,15 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\Renderer;
 
 use Dompdf\Frame;
 use Dompdf\Helpers;
 
-/**
- * Renders inline frames
- *
- * @access  private
- * @package dompdf
- */
+
 class Inline extends AbstractRenderer
 {
 
-    /**
-     * @param Frame $frame
-     */
+
     function render(Frame $frame)
     {
         $style = $frame->get_style();
@@ -39,13 +27,10 @@ class Inline extends AbstractRenderer
             (float)$style->length_in_pt($bp["left"]["width"])
         );
 
-        // Draw the background & border behind each child.  To do this we need
-        // to figure out just how much space each child takes:
         list($x, $y) = $frame->get_first_child()->get_position();
         $w = null;
         $h = 0;
-        // $x += $widths[3];
-        // $y += $widths[0];
+     
 
         $this->_set_opacity($frame->get_opacity($style->opacity));
 
@@ -57,16 +42,7 @@ class Inline extends AbstractRenderer
             list($child_x, $child_y, $child_w, $child_h) = $child->get_padding_box();
 
             if (!is_null($w) && $child_x < $x + $w) {
-                //This branch seems to be supposed to being called on the first part
-                //of an inline html element, and the part after the if clause for the
-                //parts after a line break.
-                //But because $w initially mostly is 0, and gets updated only on the next
-                //round, this seem to be never executed and the common close always.
-
-                // The next child is on another line.  Draw the background &
-                // borders on this line.
-
-                // Background:
+  
                 if (($bg = $style->background_color) !== "transparent") {
                     $this->_canvas->filled_rectangle($x, $y, $w, $h, $bg);
                 }
@@ -136,14 +112,6 @@ class Inline extends AbstractRenderer
             $this->_canvas->filled_rectangle($x + $widths[3], $y + $widths[0], $w, $h, $bg);
         }
 
-        //On continuation lines (after line break) of inline elements, the style got copied.
-        //But a non repeatable background image should not be repeated on the next line.
-        //But removing the background image above has never an effect, and removing it below
-        //removes it always, even on the initial line.
-        //Need to handle it elsewhere, e.g. on certain ...clone()... usages.
-        // Repeat not given: default is Style::__construct
-        // ... && (!($repeat = $style->background_repeat) || $repeat === "repeat" ...
-        //different position? $this->_background_image($url, $x, $y, $w, $h, $style);
         if (($url = $style->background_image) && $url !== "none") {
             $this->_background_image($url, $x + $widths[3], $y + $widths[0], $w, $h, $style);
         }
@@ -173,9 +141,6 @@ class Inline extends AbstractRenderer
             $this->$method($x, $y + $h, $w, $bp["bottom"]["color"], $widths, "bottom");
         }
 
-        //    Helpers::var_dump(get_class($frame->get_next_sibling()));
-        //    $last_row = get_class($frame->get_next_sibling()) !== 'Inline';
-        // Draw the right border if this is the last row
         if ($bp["right"]["style"] !== "none" && $bp["right"]["color"] !== "transparent" && $widths[1] > 0) {
             $method = "_border_" . $bp["right"]["style"];
             $this->$method($x + $w, $y, $h, $bp["right"]["color"], $widths, "right");
