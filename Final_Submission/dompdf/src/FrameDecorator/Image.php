@@ -1,11 +1,5 @@
 <?php
-/**
- * @package dompdf
- * @link    http://dompdf.github.com/
- * @author  Benj Carson <benjcarson@digitaljunkies.ca>
- * @author  Fabien Ménager <fabien.menager@gmail.com>
- * @license http://www.gnu.org/copyleft/lesser.html GNU Lesser General Public License
- */
+
 namespace Dompdf\FrameDecorator;
 
 use Dompdf\Dompdf;
@@ -13,35 +7,15 @@ use Dompdf\Frame;
 use Dompdf\FontMetrics;
 use Dompdf\Image\Cache;
 
-/**
- * Decorates frames for image layout and rendering
- *
- * @package dompdf
- */
+
 class Image extends AbstractFrameDecorator
 {
 
-    /**
-     * The path to the image file (note that remote images are
-     * downloaded locally to Options:tempDir).
-     *
-     * @var string
-     */
+
     protected $_image_url;
 
-    /**
-     * The image's file error message
-     *
-     * @var string
-     */
     protected $_image_msg;
 
-    /**
-     * Class constructor
-     *
-     * @param Frame $frame the frame to decorate
-     * @param DOMPDF $dompdf the document's dompdf object (required to resolve relative & remote urls)
-     */
     function __construct(Frame $frame, Dompdf $dompdf)
     {
         parent::__construct($frame, $dompdf);
@@ -67,21 +41,12 @@ class Image extends AbstractFrameDecorator
         }
     }
 
-    /**
-     * Return the image's url
-     *
-     * @return string The url of this image
-     */
     function get_image_url()
     {
         return $this->_image_url;
     }
 
-    /**
-     * Return the image's error message
-     *
-     * @return string The image's error message
-     */
+
     function get_image_msg()
     {
         return $this->_image_msg;
